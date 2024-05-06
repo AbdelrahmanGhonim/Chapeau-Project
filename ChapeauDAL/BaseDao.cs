@@ -2,12 +2,12 @@
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Data;
-using System.Windows.Forms;
 
 namespace ChapeauDAL
 {
-    public abstract class BaseDao
+    public  class BaseDao
     {
+
         private SqlDataAdapter adapter;
         protected SqlConnection conn;
 
@@ -17,13 +17,15 @@ namespace ChapeauDAL
             adapter = new SqlDataAdapter();
         }
 
-        protected SqlConnection OpenConnection()
+        public SqlConnection OpenConnection()
         {
             try
             {
                 if (conn.State == ConnectionState.Closed || conn.State == ConnectionState.Broken)
                 {
                     conn.Open();
+                    Console.WriteLine("TESTING THE CONNECTION");
+
                 }
             }
             catch (Exception e)
