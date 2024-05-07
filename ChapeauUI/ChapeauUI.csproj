@@ -11,5 +11,14 @@
   <ItemGroup>
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
   </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ChapeauModel\ChapeauModel.csproj" />
+
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ChapeauService\ChapeauService.csproj" />
+
+	</ItemGroup>
+
 
 </Project>
