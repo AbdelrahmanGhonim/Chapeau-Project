@@ -5,9 +5,9 @@ using System.Data;
 
 namespace ChapeauDAL
 {
-    public  class BaseDao
+    public abstract class BaseDao
     {
-
+         
         private SqlDataAdapter adapter;
         protected SqlConnection conn;
 
@@ -17,14 +17,13 @@ namespace ChapeauDAL
             adapter = new SqlDataAdapter();
         }
 
-        public SqlConnection OpenConnection()
+        protected SqlConnection OpenConnection()
         {
             try
             {
                 if (conn.State == ConnectionState.Closed || conn.State == ConnectionState.Broken)
                 {
                     conn.Open();
-                    Console.WriteLine("TESTING THE CONNECTION");
 
                 }
             }
