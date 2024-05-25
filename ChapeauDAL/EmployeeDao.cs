@@ -16,7 +16,7 @@ namespace ChapeauDAL
         //        Waiter, Bartender, Chef, Manager
 
          
-        public Employee GetEmployeeByUsername(string username)
+        public Employee GetEmployeeByUsername(string username) //check the name if it is lower or upper case, it should be case sensitive
         {
             string query = "SELECT employee_id,username,firstname, lastname, EmployeeRole, password FROM employee WHERE username=@username";
 

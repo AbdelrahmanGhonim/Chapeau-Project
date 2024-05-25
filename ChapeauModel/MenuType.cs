@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ChapeauModel
 {
-    public enum TableStatus
+    public enum  MenuType
     {
-        Available, Occupied, Reserved, Ordered
+        Lunch,Dinner, Alcoholic, NonAlcoholic
     }
 }
