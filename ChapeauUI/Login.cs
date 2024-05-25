@@ -15,6 +15,7 @@ namespace ChapeauUI
 {
     public partial class Login : Form
     {
+
         public Login()
         {
             InitializeComponent();
@@ -31,21 +32,22 @@ namespace ChapeauUI
 
             Employee loggedinElpoyee = employeeService.CheckLoginCredintial(usernameTxt.Text, passwordTxt.Text);
 
-            if(loggedinElpoyee != null )
+            if (loggedinElpoyee != null)
             {
                 // go to the View bassed on the employeeRole
-                getUIBassedOnEmployeeRole(loggedinElpoyee.Role);
+                getUIBassedOnEmployeeRole(loggedinElpoyee);
+
 
             }
             else
             {
-                //TODO: display it inside the label better than messagebox
-                MessageBox.Show("Invalid Username or Password");
+               
+                invalidcredentiallbl.Text="Invalid Username and Password";
             }
 
         }
 
-           
+
         private void FilledUsernameAndPassword(Object sender, EventArgs e)
         {
             bool isUsernameFilled = !string.IsNullOrWhiteSpace(usernameTxt.Text);
@@ -53,12 +55,12 @@ namespace ChapeauUI
             loginbtn.Enabled = isUsernameFilled && isPasswordFilled;
         }
 
-        private void getUIBassedOnEmployeeRole(EmployeeRole role)
-        { 
-        switch (role)
+        private void getUIBassedOnEmployeeRole(Employee employee)// change the name to something else because get seems to return something
+        {
+            switch (employee.Role)
             {
                 case EmployeeRole.Waiter:
-                    //go to tableview
+                    OpenUI(new TableView(employee));
                     break;
                 case EmployeeRole.Chef:
                     //go to kitchenview
@@ -71,5 +73,19 @@ namespace ChapeauUI
                     break;
             }
         }
+
+        private void OpenUI(Form newForm)
+        {
+
+            Form activeForm = ActiveForm;
+            activeForm.Hide();
+
+            newForm.ShowDialog();
+
+            //why I close it when I am hide it?
+            activeForm.Close();
+        }
+
+       
     }
 }
