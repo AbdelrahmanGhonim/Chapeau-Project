@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ChapeauModel
 {
-    public enum OrderStatus
+   public enum  OrderStatus
     {
-        Ordered, BeingPrepared, Ready, Delivered
+        Pending, InPreparation, Prepared, Served 
+
     }
 }
