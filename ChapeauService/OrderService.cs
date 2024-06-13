@@ -17,13 +17,14 @@ namespace ChapeauService
             orderDao = new OrderDao();
         }
 
-        public List<OrderItem> getOrderItems(Table table)
+        public List<OrderItem> GetOrderItems(Table table)
         { 
         return orderDao.GetOrderItems(table);
         }
 
         public void UpdateOrderItemStatus(OrderItem item)
         {
+             
             orderDao.UpdateOrderItemStatus(item);
         }
     }

@@ -34,14 +34,16 @@
             FreeTablebtn = new Button();
             paybtn = new Button();
             backbtn = new Button();
+            errorhandlerlbl = new Label();
             SuspendLayout();
             // 
             // tableNumberlbl
             // 
             tableNumberlbl.AutoSize = true;
-            tableNumberlbl.Location = new Point(189, 33);
+            tableNumberlbl.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
+            tableNumberlbl.Location = new Point(210, 37);
             tableNumberlbl.Name = "tableNumberlbl";
-            tableNumberlbl.Size = new Size(102, 20);
+            tableNumberlbl.Size = new Size(131, 25);
             tableNumberlbl.TabIndex = 0;
             tableNumberlbl.Text = "Table Number";
             // 
@@ -95,12 +97,23 @@
             backbtn.UseVisualStyleBackColor = true;
             backbtn.Click += backbtn_Click;
             // 
+            // errorhandlerlbl
+            // 
+            errorhandlerlbl.AutoSize = true;
+            errorhandlerlbl.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
+            errorhandlerlbl.ForeColor = Color.Yellow;
+            errorhandlerlbl.Location = new Point(138, 64);
+            errorhandlerlbl.Name = "errorhandlerlbl";
+            errorhandlerlbl.Size = new Size(0, 23);
+            errorhandlerlbl.TabIndex = 6;
+            // 
             // TableOptionUI
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SteelBlue;
             ClientSize = new Size(508, 498);
+            Controls.Add(errorhandlerlbl);
             Controls.Add(backbtn);
             Controls.Add(paybtn);
             Controls.Add(FreeTablebtn);
@@ -121,5 +134,6 @@
         private Button FreeTablebtn;
         private Button paybtn;
         private Button backbtn;
+        private Label errorhandlerlbl;
     }
 }

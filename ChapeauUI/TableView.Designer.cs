@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TableView));
             pictureBox1 = new PictureBox();
             pictureBox2 = new PictureBox();
             pictureBox4 = new PictureBox();
@@ -40,12 +41,14 @@
             pictureBox3 = new PictureBox();
             label1 = new Label();
             pictureBox6 = new PictureBox();
+            pictureBox7 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox6).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox7).BeginInit();
             SuspendLayout();
             // 
             // pictureBox1
@@ -123,17 +126,21 @@
             // usernamelbl
             // 
             usernamelbl.AutoSize = true;
-            usernamelbl.Location = new Point(421, 23);
+            usernamelbl.BackColor = SystemColors.HotTrack;
+            usernamelbl.Font = new Font("Franklin Gothic Medium", 10.2F, FontStyle.Bold, GraphicsUnit.Point);
+            usernamelbl.Location = new Point(367, 9);
             usernamelbl.Name = "usernamelbl";
-            usernamelbl.Size = new Size(75, 20);
+            usernamelbl.Size = new Size(92, 21);
             usernamelbl.TabIndex = 21;
             usernamelbl.Text = "Username";
             // 
             // logoutbtn
             // 
-            logoutbtn.Location = new Point(402, 46);
+            logoutbtn.FlatStyle = FlatStyle.Popup;
+            logoutbtn.Font = new Font("Arial", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            logoutbtn.Location = new Point(420, 33);
             logoutbtn.Name = "logoutbtn";
-            logoutbtn.Size = new Size(94, 29);
+            logoutbtn.Size = new Size(66, 29);
             logoutbtn.TabIndex = 22;
             logoutbtn.Text = "Logout";
             logoutbtn.UseVisualStyleBackColor = true;
@@ -169,12 +176,25 @@
             pictureBox6.TabIndex = 29;
             pictureBox6.TabStop = false;
             // 
+            // pictureBox7
+            // 
+            pictureBox7.BackColor = SystemColors.HotTrack;
+            pictureBox7.BorderStyle = BorderStyle.FixedSingle;
+            pictureBox7.Image = (Image)resources.GetObject("pictureBox7.Image");
+            pictureBox7.Location = new Point(0, 0);
+            pictureBox7.Name = "pictureBox7";
+            pictureBox7.Size = new Size(146, 75);
+            pictureBox7.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox7.TabIndex = 31;
+            pictureBox7.TabStop = false;
+            // 
             // TableView
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ButtonFace;
             ClientSize = new Size(508, 576);
+            Controls.Add(pictureBox7);
             Controls.Add(label1);
             Controls.Add(pictureBox6);
             Controls.Add(logoutbtn);
@@ -195,6 +215,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox6).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox7).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -213,5 +234,6 @@
         private PictureBox pictureBox3;
         private Label label1;
         private PictureBox pictureBox6;
+        private PictureBox pictureBox7;
     }
 }

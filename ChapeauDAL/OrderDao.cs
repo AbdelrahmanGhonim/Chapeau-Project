@@ -57,9 +57,11 @@ namespace ChapeauDAL
                     OrderStatus = (OrderStatus)Enum.Parse(typeof(OrderStatus), (string)dataRow["OrderStatus"]),
                     Price = (decimal)dataRow["price"],
                     VatType = (decimal)dataRow["VAT"],
-                    PreprationTime = TimeOnly.FromDateTime(DateTime.Today.Add((TimeSpan)dataRow["PreparationTime"])),
+                    PreparationTime = (TimeSpan)dataRow["PreparationTime"],
                     Comments = (string)dataRow["Comment"],
-                    MenuType = (MenuType)Enum.Parse(typeof(MenuType), (string)dataRow["MenuType"])
+                    MenuType = (MenuType)Enum.Parse(typeof(MenuType), (string)dataRow["MenuType"]),
+                    ItemPlacedTime = (DateTime)dataRow["ItemPlacedTime"]
+
                 };
                 orderItems.Add(item);
             }
