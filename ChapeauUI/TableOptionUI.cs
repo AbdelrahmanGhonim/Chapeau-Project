@@ -12,15 +12,19 @@ using System.Windows.Forms;
 
 namespace ChapeauUI
 {
-    public partial class TableOptionUI : Form
+    public partial class TableOptionUI : Form //don't forget todo error handler 
     {
         private Table table;
         private Employee loggedInEmployee;
+        private TableService tableService;
         public TableOptionUI(Table table, Employee employee) //I should Pass the Employee 
         {
             InitializeComponent();
             this.table = table;
             this.loggedInEmployee = employee;
+            this.tableService = new TableService(); // Initialize the TableService
+            tableNumberlbl.Text= "Table: " +  table.TableNumber.ToString();
+
         }
 
         private void backbtn_Click(object sender, EventArgs e)
@@ -37,29 +41,39 @@ namespace ChapeauUI
 
             popUpForm.ShowDialog();
 
-            //why I close it when I am hide it?
             activeForm.Close();
         }
 
         private void reserveTablebtn_Click(object sender, EventArgs e)
         {
-            //check the Table Status before you setting the table, for example if the table is already Reserved to display a message or something
-            ChangeTableStatus(TableStatus.Reserved);
-            //display a message or change the button color
+            try
+            {
+                tableService.ReserveTable(table);
+                errorhandlerlbl.Text = "Table reserved successfully.";
+                errorhandlerlbl.ForeColor = Color.Yellow;                                                      
+            }
+            catch (InvalidOperationException ex)
+            {
+                errorhandlerlbl.Text = ex.Message;
+                errorhandlerlbl.ForeColor = Color.Red;
+            }
 
-        }
-
-        private void ChangeTableStatus(TableStatus tableStatus)
-        {
-            table.Status = tableStatus;
-            TableService tableService = new TableService();
-            tableService.UpdateTableStatus(table);
         }
 
         private void FreeTablebtn_Click(object sender, EventArgs e)
         {
-            ChangeTableStatus(TableStatus.Available);
-            //display a message or change the button color
+            try
+            {
+                tableService.FreeTable(table);
+                errorhandlerlbl.Text = "Table is now available.";
+                errorhandlerlbl.ForeColor = Color.Yellow; 
+                                                       
+            }
+            catch (InvalidOperationException ex)
+            {
+                errorhandlerlbl.Text = ex.Message;
+                errorhandlerlbl.ForeColor = Color.Red; 
+            }
         }
 
         private void placeOrderbtn_Click(object sender, EventArgs e)
