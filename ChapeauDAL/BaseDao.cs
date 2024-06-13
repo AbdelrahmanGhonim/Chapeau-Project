@@ -1,13 +1,12 @@
-﻿using System;
-using System.Data.SqlClient;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace ChapeauDAL
 {
     public abstract class BaseDao
     {
-         
+
         private SqlDataAdapter adapter;
         protected SqlConnection conn;
 
@@ -91,7 +90,7 @@ namespace ChapeauDAL
             return dataTable;
         }
 
-        protected DataTable ExecuteSelectQuery(string query)      //this returns without the need of a parameter, e.g. table id
+        protected DataTable ExecuteSelectQuery(string query)
         {
             SqlCommand command = new SqlCommand();
             DataTable dataTable;
