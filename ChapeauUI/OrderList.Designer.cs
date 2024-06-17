@@ -72,6 +72,7 @@
             logOutBtn.TabIndex = 1;
             logOutBtn.Text = "Logout";
             logOutBtn.UseVisualStyleBackColor = true;
+            logOutBtn.Click += logOutBtn_Click;
             // 
             // roleLbl
             // 

@@ -21,7 +21,7 @@ namespace ChapeauDAL
         {
             string query = "  SELECT oi.*" +
                     " FROM [dbo].[ORDER] o      " +
-                    " JOIN [dbo].[orderItems] oi ON o.orderID = oi.orderID " +
+                    " JOIN [dbo].[OrderedItems] oi ON o.orderID = oi.orderID " +
                     " WHERE o.tableNumber = @tableNumber";
 
             SqlParameter[] parameters = new SqlParameter[1]// check it later
@@ -36,7 +36,7 @@ namespace ChapeauDAL
 
         public void UpdateOrderItemStatus(OrderItem item)
         {
-            string updateQuery = "UPDATE orderItems SET OrderStatus = @OrderStatus WHERE itemID = @itemID";
+            string updateQuery = "UPDATE OrderedItems SET OrderStatus = @OrderStatus WHERE itemID = @itemID";
 
             SqlParameter[] sqlParameters = new SqlParameter[]
             {

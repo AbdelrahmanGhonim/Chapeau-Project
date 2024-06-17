@@ -78,7 +78,8 @@ namespace ChapeauUI
 
         private void placeOrderbtn_Click(object sender, EventArgs e)
         {
-            //OpenUI to the Order View
+            OrderList orderList = new OrderList(table, loggedInEmployee);
+            OpenUI(orderList);
         }
 
         private void paybtn_Click(object sender, EventArgs e)
@@ -86,5 +87,6 @@ namespace ChapeauUI
             //OpenUI to the Payment Details
 
         }
+  
     }
 }

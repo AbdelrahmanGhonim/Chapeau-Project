@@ -239,7 +239,7 @@ namespace ChapeauUI
 
             foreach (OrderItem item in preparedItems)
             {
-                    checkedListBox.Items.Add(item.ItemName);
+                    checkedListBox.Items.Add(item.MenuItem.Name);
                     itemIndexMapping[index] = item;
                     index++;
             }
@@ -298,7 +298,7 @@ namespace ChapeauUI
 
             foreach (OrderItem item in items)
             {
-                ListViewItem listViewItem = new ListViewItem(item.ItemName);
+                ListViewItem listViewItem = new ListViewItem(item.MenuItem.Name);
                 listViewItem.SubItems.Add(GetCountdownString(item));
                 listViewItem.Tag = item;
                 listView.Items.Add(listViewItem);

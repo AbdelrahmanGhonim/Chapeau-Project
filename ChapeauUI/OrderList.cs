@@ -21,14 +21,16 @@ namespace ChapeauUI {
         private List<OrderItem> orderedItems;
         private OrderService orderService;
         private Table selectedTable;
+        private Employee loggedEmployee;
 
-        public OrderList(Table table)
+        public OrderList(Table table, Employee employee)
         {
             InitializeComponent();
             this.selectedMenu = MenuItemType.Lunch;
             this.orderedItems = new List<OrderItem>();
             this.orderService = new OrderService();
             this.selectedTable = table;
+            this.loggedEmployee = employee;
 
             InitializeMenu();
         }
@@ -323,7 +325,6 @@ namespace ChapeauUI {
             btnComment.Visible = true;
             numQuantity.Visible = true;
             btnRemoveAll.Visible = false;
-            addBtn.Visible = false;
         }
 
         private void ResetButtonVisibility()
@@ -332,7 +333,6 @@ namespace ChapeauUI {
             btnComment.Visible = false;
             numQuantity.Visible = false;
             btnRemoveAll.Visible = true;
-            addBtn.Visible = true;
         }
 
         private void UpdateButtonAppearance(Button button)
@@ -354,6 +354,26 @@ namespace ChapeauUI {
             selectedMenu = MenuItemType.Drinks;
             ShowMenuItems(selectedMenu);
             UpdateButtonAppearance(sender as Button);
+        }
+
+        private void logOutBtn_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Are you sure that you want to logout?", "Confirm Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                Login loginForm = new Login();
+                OpenUI(loginForm);
+                this.Close();
+            }
+        }
+        private void OpenUI(Form popUpForm)
+        {
+            Form activeForm = ActiveForm;
+            activeForm.Hide();
+
+            popUpForm.ShowDialog();
+
+            activeForm.Close();
         }
     }
 
