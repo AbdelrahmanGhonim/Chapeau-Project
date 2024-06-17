@@ -28,21 +28,26 @@ namespace ChapeauUI
 
         private void loginbtn_Click(object sender, EventArgs e)
         {
-            EmployeeService employeeService = new EmployeeService();
-
-            Employee loggedinElpoyee = employeeService.CheckLoginCredintial(usernameTxt.Text, passwordTxt.Text);
-
-            if (loggedinElpoyee != null)
+            try
             {
-                // go to the View bassed on the employeeRole
-                getUIBassedOnEmployeeRole(loggedinElpoyee);
+                EmployeeService employeeService = new EmployeeService();
 
+                Employee loggedinElpoyee = employeeService.CheckLoginCredintial(usernameTxt.Text, passwordTxt.Text);
 
+                if (loggedinElpoyee != null)
+                {
+                    // go to the View bassed on the employeeRole
+                    getUIBassedOnEmployeeRole(loggedinElpoyee);
+
+                }
+                else
+                {
+                    invalidcredentiallbl.Text = "Invalid Username and Password";
+                }
             }
-            else
+            catch (Exception ex)
             {
-               
-                invalidcredentiallbl.Text="Invalid Username and Password";
+                MessageBox.Show("An error occurred while trying to log in. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -82,7 +87,6 @@ namespace ChapeauUI
 
             newForm.ShowDialog();
 
-            //why I close it when I am hide it?
             activeForm.Close();
         }
 
