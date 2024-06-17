@@ -172,7 +172,7 @@
             dinnerBtn.TabIndex = 10;
             dinnerBtn.Text = "Dinner";
             dinnerBtn.UseVisualStyleBackColor = false;
-            dinnerBtn.Click += dinnerBtn_Click;
+            dinnerBtn.Click += dinnerBtn_Click_1;
             // 
             // label2
             // 
@@ -310,7 +310,6 @@
             ClientSize = new Size(903, 1277);
             Controls.Add(pnlComment);
             Controls.Add(numQuantity);
-            Controls.Add(btnRemove);
             Controls.Add(btnComment);
             Controls.Add(btnRemoveAll);
             Controls.Add(label2);
@@ -324,6 +323,7 @@
             Controls.Add(roleLbl);
             Controls.Add(logOutBtn);
             Controls.Add(label1);
+            Controls.Add(btnRemove);
             Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Name = "OrderList";
             Text = "OrderList";

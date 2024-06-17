@@ -208,7 +208,8 @@ namespace ChapeauUI
                 {
                     if (item.OrderStatus == OrderStatus.Prepared)
                     {
-                        checkedListBox.Items.Add(item.ItemName);
+                    //oliwia - has to me item.menuItem.Name 
+                        //checkedListBox.Items.Add(item.ItemName);
                         itemIndexMapping[index] = item;
                         index++;
                     }

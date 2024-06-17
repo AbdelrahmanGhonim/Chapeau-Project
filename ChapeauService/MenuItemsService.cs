@@ -16,6 +16,10 @@ namespace ChapeauService
         {
             menuItemsDao = new MenuItemsDao();
         }
+        public MenuItem GetMenuItemById(int itemId)
+        {
+            return menuItemsDao.GetMenuItemById(itemId);
+        }
         public List<MenuItem> GetMenuItemsByType(MenuItemType menuItemType)
         {
             return menuItemsDao.GetMenuItemsByType(menuItemType);
@@ -54,7 +58,7 @@ namespace ChapeauService
             {
                 case MenuItemType.Dinner: return GetDinner();
                 case MenuItemType.Lunch: return GetLunch();
-                case MenuItemType.Drink: return GetDrinks();
+                case MenuItemType.Drinks: return GetDrinks();
                 default: throw new NotImplementedException();
             }
         }

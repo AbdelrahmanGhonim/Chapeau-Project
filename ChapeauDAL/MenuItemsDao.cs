@@ -39,14 +39,65 @@ namespace ChapeauDAL
                 throw;
             }
         }
+        public void UpdateStock(int itemId, int quantity)
+        {
+            string sql = "UPDATE menuItem SET stockLeft = stockLeft - @quantity WHERE itemID = @itemId";
 
+            SqlParameter[] sqlParameters = new SqlParameter[]
+            {
+            new SqlParameter("@quantity", SqlDbType.Int) { Value = quantity },
+            new SqlParameter("@itemId", SqlDbType.Int) { Value = itemId }
+            };
+
+            try
+            {
+                ExecuteEditQuery(sql, sqlParameters);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error updating stock: " + ex.Message);
+                throw;
+            }
+        }
+        public MenuItem GetMenuItemById(int itemId)
+        {
+            string sql = "SELECT mi.itemID, mi.menuId, mi.name, mi.price, mi.stockLeft, mi.menuCategory, m.menuType " +
+                         "FROM menuItem mi " +
+                         "INNER JOIN menu m ON mi.menuId = m.id " +
+                         "WHERE mi.itemID = @itemId";
+
+            SqlParameter[] sqlParameters = new SqlParameter[]
+            {
+            new SqlParameter("@itemId", SqlDbType.Int) { Value = itemId }
+            };
+
+            try
+            {
+                DataTable resultTable = ExecuteSelectQueryWithParameters(sql, sqlParameters);
+                var result = ReadMenuTables(resultTable);
+
+                if (result.Count > 0)
+                {
+                    return result[0];
+                }
+                else
+                {
+                    throw new Exception($"No menu item found with ID {itemId}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error executing query: " + ex.Message);
+                throw;
+            }
+        }
         private MenuItemType ConvertStringToMenuItemType(string menuItemType)
         {
             return menuItemType switch
             {
                 "Lunch" => MenuItemType.Lunch,
                 "Dinner" => MenuItemType.Dinner,
-                "Drink" => MenuItemType.Drink,
+                "Drinks" => MenuItemType.Drinks,
                 _ => throw new Exception($"Exception menu item type {menuItemType} is not known")
             };
         }

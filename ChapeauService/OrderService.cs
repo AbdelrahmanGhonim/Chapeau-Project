@@ -18,13 +18,22 @@ namespace ChapeauService
         }
 
         public List<OrderItem> getOrderItems(Table table)
-        { 
-        return orderDao.GetOrderItems(table);
+        {
+            return orderDao.GetOrderItems(table);
         }
 
         public void UpdateOrderItemStatus(OrderItem item)
         {
             orderDao.UpdateOrderItemStatus(item);
+        }
+        public void AddOrderItem(Order order)
+        {
+             orderDao.AddOrderItems(order);
+        }
+   
+        public void AddOrder(Order order)
+        {
+            orderDao.AddOrder(order);
         }
     }
 }

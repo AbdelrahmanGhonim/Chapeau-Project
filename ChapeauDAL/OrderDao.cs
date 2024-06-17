@@ -11,6 +11,12 @@ namespace ChapeauDAL
 {
     public class OrderDao : BaseDao
     {
+        private  MenuItemsDao menuItemsDao;
+
+        public OrderDao()
+        {
+               menuItemsDao = new MenuItemsDao();
+        }
         public List<OrderItem> GetOrderItems(Table table) //TODO: don't use the * 
         {
             string query = "  SELECT oi.*" +
@@ -18,16 +24,15 @@ namespace ChapeauDAL
                     " JOIN [dbo].[orderItems] oi ON o.orderID = oi.orderID " +
                     " WHERE o.tableNumber = @tableNumber";
 
-                    SqlParameter[] parameters = new SqlParameter[1]// check it later
-              {
+            SqlParameter[] parameters = new SqlParameter[1]// check it later
+      {
                     new SqlParameter("@tableNumber", table.TableNumber)
-              };
+      };
 
             return ReadOrderItems(ExecuteSelectQueryWithParameters(query, parameters));
 
 
         }
-
 
         public void UpdateOrderItemStatus(OrderItem item)
         {
@@ -36,11 +41,66 @@ namespace ChapeauDAL
             SqlParameter[] sqlParameters = new SqlParameter[]
             {
             new SqlParameter("@OrderStatus", item.OrderStatus.ToString()),
-            new SqlParameter("@itemID", item.ItemID)
+            new SqlParameter("@itemID", item.MenuItem.ItemId)
             };
 
             ExecuteEditQuery(updateQuery, sqlParameters);
         }
+
+        public void AddOrder(Order order)
+        {
+            string query = "INSERT INTO [dbo].[Order] (tableNumber, billID, orderDateTime) " +
+                           "VALUES (@tableNumber, @billID, @orderDateTime); " +
+                           "SELECT SCOPE_IDENTITY();";
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+        new SqlParameter("@tableNumber", order.TableNumber.TableNumber),
+        new SqlParameter("@billID", order.BillID),
+        new SqlParameter("@orderDateTime", order.OrderTime)
+            };
+
+            int orderId = ExecuteEditQueryReturnId(query, parameters);
+
+            order.OrderID = orderId;
+
+            foreach (OrderItem item in order.OrderedItems)
+            {
+                item.OrderId = orderId;
+            }
+
+            AddOrderItems(order);
+        }
+
+
+        public void AddOrderItems(Order order)
+        {
+            try
+            {
+                foreach (OrderItem item in order.OrderedItems)
+                {
+                    string query = "INSERT INTO [dbo].[OrderedItems] (orderID, itemID, quantity, comment) " +
+                                   "VALUES (@orderID, @itemID, @quantity, @comment)";
+
+                    SqlParameter[] sqlParameters = new SqlParameter[]
+                    {
+                    new SqlParameter("@orderID", item.OrderId),
+                    new SqlParameter("@itemID", item.MenuItem.ItemId),
+                    new SqlParameter("@quantity", item.Quantity),
+                    new SqlParameter("@comment", item.Comments)
+                    };
+
+                    ExecuteEditQuery(query, sqlParameters);
+
+                    menuItemsDao.UpdateStock(item.MenuItem.ItemId, item.Quantity);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error adding order items: {ex.Message}");
+            }
+        }
+
 
         private List<OrderItem> ReadOrderItems(DataTable data)
         {
@@ -49,22 +109,14 @@ namespace ChapeauDAL
             {
                 OrderItem item = new OrderItem()
                 {
-                    ItemID = (int)dataRow["itemID"],
+                    MenuItem = new MenuItem { ItemId = (int)dataRow["itemID"] },
                     OrderId = (int)dataRow["orderID"],
                     Quantity = (int)dataRow["quantity"],
-                    StockQuantity = (int)dataRow["stockQuantity"],
-                    ItemName = (string)dataRow["orderName"],
-                    OrderStatus = (OrderStatus)Enum.Parse(typeof(OrderStatus), (string)dataRow["OrderStatus"]),
-                    Price = (decimal)dataRow["price"],
-                    VatType = (decimal)dataRow["VAT"],
-                    PreprationTime = TimeOnly.FromDateTime(DateTime.Today.Add((TimeSpan)dataRow["PreparationTime"])),
-                    Comments = (string)dataRow["Comment"],
-                    MenuType = (MenuType)Enum.Parse(typeof(MenuType), (string)dataRow["MenuType"])
+                    Comments = (string)dataRow["comment"],
                 };
                 orderItems.Add(item);
             }
             return orderItems;
-
         }
     }
 }

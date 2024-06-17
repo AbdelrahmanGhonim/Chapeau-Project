@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using ChapeauDAL;
 using ChapeauService;
 using ChapeauModel;
+using System.Globalization;
 
 namespace ChapeauUI {
 
@@ -17,11 +18,17 @@ namespace ChapeauUI {
     {
         private MenuItemType selectedMenu;
         private MenuItemControl selectedMenuItemControl;
+        private List<OrderItem> orderedItems;
+        private OrderService orderService;
+        private Table selectedTable;
 
-        public OrderList()
+        public OrderList(Table table)
         {
             InitializeComponent();
             this.selectedMenu = MenuItemType.Lunch;
+            this.orderedItems = new List<OrderItem>();
+            this.orderService = new OrderService();
+            this.selectedTable = table;
 
             InitializeMenu();
         }
@@ -63,13 +70,6 @@ namespace ChapeauUI {
             }
         }
 
-        private void lunchBtn_Click(object sender, EventArgs e)
-        {
-            selectedMenu = MenuItemType.Lunch;
-            ShowMenuItems(selectedMenu);
-            UpdateButtonAppearance(sender as Button);
-        }
-
         private void MenuItemControl_MenuItemClicked(object sender, MenuItemControl menuItemControl)
         {
             if (selectedMenuItemControl != null)
@@ -80,73 +80,62 @@ namespace ChapeauUI {
             selectedMenuItemControl = menuItemControl;
             selectedMenuItemControl.BackColor = Color.DarkGray;
 
-            string itemName = selectedMenuItemControl.Name;
-            string itemPrice = selectedMenuItemControl.Price;
-            string comment = "";
+            MenuItemsService menuItemsService = new MenuItemsService();
+            MenuItem menuItem = menuItemsService.GetMenuItemById(menuItemControl.MenuItemId);
 
-            AddMenuItemToListView(itemName, itemPrice, comment);
+            // Check if the item exists and has the same comments (considering comments as unique identifier for now)
+            OrderItem existingItem = orderedItems.FirstOrDefault(item => item.MenuItem.ItemId == menuItem.ItemId && string.IsNullOrEmpty(item.Comments));
+            if (existingItem != null)
+            {
+                existingItem.Quantity++;
+                UpdateListViewItem(existingItem);
+            }
+            else
+            {
+                OrderItem newOrderItem = new OrderItem(menuItem);
+                orderedItems.Add(newOrderItem);
+                AddMenuItemToListView(newOrderItem);
+            }
 
             UpdateAddButtonVisibility();
         }
 
-        private void AddMenuItemToListView(string itemName, string itemPrice, string comment)
+        private void UpdateListViewItem(OrderItem orderItem)
         {
-            bool itemFound = false;
-
             foreach (ListViewItem item in listViewOrder.Items)
             {
-                OrderItem orderItem = (OrderItem)item.Tag;
-                if (orderItem.MenuItem.Name == itemName && orderItem.Comment == comment)
+                if (item.Tag == orderItem)
                 {
-                    orderItem.Amount++;
-                    item.SubItems[0].Text = orderItem.Amount.ToString();
-                    itemFound = true;
+                    item.SubItems[0].Text = $"{orderItem.Quantity}x";
                     break;
-                }
-            }
-
-            if (!itemFound)
-            {
-                MenuItem menuItem = GetMenuItemByName(itemName);
-                if (menuItem != null)
-                {
-                    OrderItem newOrderItem = new OrderItem(menuItem, 1, DateTime.Now, comment);
-                    ListViewItem listViewItem = new ListViewItem(newOrderItem.Amount.ToString());
-                    listViewItem.SubItems.Add(newOrderItem.MenuItem.Name);
-                    listViewItem.SubItems.Add(newOrderItem.Comment);
-                    listViewItem.Tag = newOrderItem;
-                    listViewOrder.Items.Add(listViewItem);
-                }
-                else
-                {
-                    MessageBox.Show($"MenuItem not found for item: {itemName}");
                 }
             }
         }
 
-        private MenuItem GetMenuItemByName(string itemName)
+        private void AddMenuItemToListView(OrderItem orderItem)
         {
-            return new MenuItem
-            {
-                Name = itemName,
-               // Price = 
-
-            };
+            ListViewItem li = new ListViewItem($"{orderItem.Quantity}x");
+            li.SubItems.Add($"{orderItem.MenuItem.Name}");
+            li.SubItems.Add($"{orderItem.Comments}");
+            li.Tag = orderItem;
+            listViewOrder.Items.Add(li);
         }
 
         private void addBtn_Click(object sender, EventArgs e)
         {
-            List<OrderItem> orderedItems = new List<OrderItem>();
-
-            foreach (ListViewItem item in listViewOrder.Items)
+            try
             {
-                OrderItem orderItem = (OrderItem)item.Tag;
-                orderedItems.Add(orderItem);
-            }
+                Order newOrder = new Order(selectedTable);
+                newOrder.OrderedItems = orderedItems;
 
-            OrderConfirmation orderSummaryForm = new OrderConfirmation(orderedItems);
-            orderSummaryForm.Show();
-            this.Hide();
+                orderService.AddOrder(newOrder);
+
+                MessageBox.Show("Order added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void listViewOrder_SelectedIndexChanged(object sender, EventArgs e)
@@ -156,7 +145,7 @@ namespace ChapeauUI {
                 ButtonsVisibility();
                 ListViewItem selectedItem = listViewOrder.SelectedItems[0];
 
-                int quantity = int.Parse(selectedItem.SubItems[0].Text);
+                int quantity = int.Parse(selectedItem.SubItems[0].Text.Replace("x", ""));
                 numQuantity.Value = quantity;
             }
             else
@@ -175,11 +164,12 @@ namespace ChapeauUI {
                 if (numQuantity.Value == 0)
                 {
                     listViewOrder.Items.Remove(selectedItem);
+                    orderedItems.Remove(orderItem);
                 }
                 else
                 {
-                    orderItem.Amount = (int)numQuantity.Value;
-                    selectedItem.SubItems[0].Text = orderItem.Amount.ToString();
+                    orderItem.Quantity = (int)numQuantity.Value;
+                    selectedItem.SubItems[0].Text = $"{orderItem.Quantity}x";
                 }
             }
         }
@@ -202,7 +192,7 @@ namespace ChapeauUI {
                 selectedItem.SubItems[2].Text = txtBoxComment.Text;
 
                 OrderItem orderItem = (OrderItem)selectedItem.Tag;
-                orderItem.Comment = txtBoxComment.Text;
+                orderItem.Comments = txtBoxComment.Text;
             }
         }
 
@@ -278,6 +268,21 @@ namespace ChapeauUI {
             }
         }
 
+        private void lunchBtn_Click(object sender, EventArgs e)
+        {
+            selectedMenu = MenuItemType.Lunch;
+            ShowMenuItems(selectedMenu);
+            UpdateButtonAppearance(sender as Button);
+        }
+        private void dinnerBtn_Click_1(object sender, EventArgs e)
+        {
+            selectedMenu = MenuItemType.Dinner;
+            ShowMenuItems(selectedMenu);
+            UpdateButtonAppearance(sender as Button);
+        }
+
+
+
         private void btnBack_Click(object sender, EventArgs e)
         {
             pnlComment.Visible = false;
@@ -296,27 +301,13 @@ namespace ChapeauUI {
             if (listViewOrder.SelectedItems.Count > 0)
             {
                 ListViewItem selectedItem = listViewOrder.SelectedItems[0];
+                OrderItem orderItem = (OrderItem)selectedItem.Tag;
 
                 listViewOrder.Items.Remove(selectedItem);
+                orderedItems.Remove(orderItem);
                 listViewOrder.SelectedItems.Clear();
 
                 ResetButtonVisibility();
-            }
-        }
-
-        private void btnComment_Click(object sender, EventArgs e)
-        {
-            if (listViewOrder.SelectedItems.Count > 0)
-            {
-                pnlComment.Visible = true;
-
-                foreach (Control control in Controls)
-                {
-                    if (control != pnlComment)
-                    {
-                        control.Enabled = false;
-                    }
-                }
             }
         }
 
@@ -324,15 +315,6 @@ namespace ChapeauUI {
         {
             addBtn.Visible = listViewOrder.Items.Count > 0;
             btnRemoveAll.Visible = listViewOrder.Items.Count > 0;
-        }
-
-        private void btnRemoveAll_Click(object sender, EventArgs e)
-        {
-            listViewOrder.Items.Clear();
-            if (selectedMenuItemControl != null)
-            {
-                selectedMenuItemControl.BackColor = Color.FromArgb(217, 217, 217);
-            }
         }
 
         private void ButtonsVisibility()
@@ -353,33 +335,28 @@ namespace ChapeauUI {
             addBtn.Visible = true;
         }
 
-        private void dinnerBtn_Click(object sender, EventArgs e)
+        private void UpdateButtonAppearance(Button button)
         {
-            selectedMenu = MenuItemType.Dinner;
-            ShowMenuItems(selectedMenu);
-            UpdateButtonAppearance(sender as Button);
+            lunchBtn.BackColor = Color.FromArgb(192, 192, 192);
+
+            button.BackColor = Color.DarkGray;
+        }
+
+        private void btnRemoveAll_Click(object sender, EventArgs e)
+        {
+            listViewOrder.Items.Clear();
+            orderedItems.Clear();
+            ResetButtonVisibility();
         }
 
         private void drinksBtn_Click(object sender, EventArgs e)
         {
-            //selectedMenu = MenuItemType.Drinks;
-            //ShowMenuItems(selectedMenu);
-            //UpdateButtonAppearance(sender as Button);
-        }
-
-        private void UpdateButtonAppearance(Button activeButton)
-        {
-            foreach (Control control in Controls)
-            {
-                if (control is Button button)
-                {
-                    button.BackColor = Color.FromArgb(6, 167, 125);
-                }
-            }
-
-            activeButton.BackColor = Color.FromArgb(1, 32, 24);
+            selectedMenu = MenuItemType.Drinks;
+            ShowMenuItems(selectedMenu);
+            UpdateButtonAppearance(sender as Button);
         }
     }
+
 
 }
 

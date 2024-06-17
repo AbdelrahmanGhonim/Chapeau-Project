@@ -27,34 +27,25 @@ namespace ChapeauUI
             set => lblPrice.Text = value;
         }
 
+        public event EventHandler<MenuItemControl> MenuItemClicked;
+
         public MenuItemControl()
         {
             InitializeComponent();
             this.Click += MenuItemControl_Click;
-            lblName.Click += MenuItemControl_Click; 
-            lblPrice.Click += MenuItemControl_Click; 
+        }
+
+        private void MenuItemControl_Click(object sender, EventArgs e)
+        {
+            MenuItemClicked?.Invoke(this, this);
         }
 
         public void SetMenuItem(int menuItemId, string name, decimal price)
         {
             this.MenuItemId = menuItemId;
-            Name = name;
-            Price = price.ToString("C", CultureInfo.CreateSpecificCulture("de-DE"));
-        }
-
-        private void MenuItemControl_Click(object sender, EventArgs e)
-        {
-            this.BackColor = Color.DarkGray; 
-            OnMenuItemClicked(this);
-        }
-
-        public event EventHandler<MenuItemControl> MenuItemClicked;
-
-        protected virtual void OnMenuItemClicked(MenuItemControl menuItemControl)
-        {
-            MenuItemClicked?.Invoke(this, menuItemControl);
+            this.Name = name;
+            this.Price = price.ToString("C");
         }
     }
-
 
 }
