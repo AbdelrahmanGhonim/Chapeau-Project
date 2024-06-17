@@ -30,12 +30,7 @@ namespace ChapeauModel
             Quantity = 1;
             Comments = "";
         }
-        public OrderItem(MenuItem menuItem, int amount, string comment)
-        {
-            MenuItem = menuItem;
-            Quantity = amount;
-            Comments = comment;
-        }
+
 
     }
 }

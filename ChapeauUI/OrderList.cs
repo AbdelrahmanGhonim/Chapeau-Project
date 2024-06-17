@@ -85,7 +85,6 @@ namespace ChapeauUI {
             MenuItemsService menuItemsService = new MenuItemsService();
             MenuItem menuItem = menuItemsService.GetMenuItemById(menuItemControl.MenuItemId);
 
-            // Check if the item exists and has the same comments (considering comments as unique identifier for now)
             OrderItem existingItem = orderedItems.FirstOrDefault(item => item.MenuItem.ItemId == menuItem.ItemId && string.IsNullOrEmpty(item.Comments));
             if (existingItem != null)
             {
