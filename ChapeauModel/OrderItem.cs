@@ -10,7 +10,7 @@ namespace ChapeauModel
     public class OrderItem
     {
         public MenuItem MenuItem { get; set; }
-        public Order OrderId { get; set; }
+        public Order Order { get; set; }
         public int Quantity { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public string Comments { get; set; }
