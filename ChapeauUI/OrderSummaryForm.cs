@@ -24,7 +24,7 @@ namespace ChapeauUI
 
         private void LogoutButton_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("Are you sure that you want to logout?", "Confirm Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult result = MessageBox.Show("Are you sure that you want to logout?", "Confirm Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question); //add comments;
             if (result == DialogResult.Yes)
             {
                 // Hide the current form
