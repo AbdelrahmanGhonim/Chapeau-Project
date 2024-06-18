@@ -65,7 +65,8 @@ namespace ChapeauDAL
                 new SqlParameter("@employee", order.Employee.EmployeeId)
             };
 
-            int orderId = ExecuteEditQueryReturnId(query, parameters);
+
+            int orderId = ExecuteScalarQuery<int>(query, parameters);
 
             order.OrderID = orderId;
 

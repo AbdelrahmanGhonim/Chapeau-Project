@@ -60,29 +60,27 @@ namespace ChapeauDAL
                 CloseConnection();
             }
         }
-        protected int ExecuteEditQueryReturnId(string query, SqlParameter[] sqlParameters)
+        protected T ExecuteScalarQuery<T>(string query, SqlParameter[] sqlParameters, T defaultValue = default(T))
         {
-            // -1 means failure. Update if succeeds
-            int newlyAddedID = -1;
-            SqlCommand command = new SqlCommand();
-            try
+            using (SqlCommand command = new SqlCommand())
             {
-                command.Connection = OpenConnection();
-                command.CommandText = query;
-                command.Parameters.AddRange(sqlParameters);
-                adapter.InsertCommand = command;
-                decimal result = (decimal)command.ExecuteScalar();
-                newlyAddedID = (int)Math.Round(result, 1);
+                try
+                {
+                    command.Connection = OpenConnection();
+                    command.CommandText = query;
+                    command.Parameters.AddRange(sqlParameters);
+                    object result = command.ExecuteScalar();
+                    return result != DBNull.Value ? (T)Convert.ChangeType(result, typeof(T)) : defaultValue;
+                }
+                catch (SqlException e)
+                {
+                    throw new Exception(e.Message);
+                }
+                finally
+                {
+                    CloseConnection();
+                }
             }
-            catch (SqlException e)
-            {
-                throw e;
-            }
-            finally
-            {
-                CloseConnection();
-            }
-            return newlyAddedID;
         }
         protected object ExecuteEditQueryReturnObject(string query, SqlParameter[] sqlParameters)
         {
