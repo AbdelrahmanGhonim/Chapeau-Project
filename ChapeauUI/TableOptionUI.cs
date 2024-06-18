@@ -12,18 +12,18 @@ using System.Windows.Forms;
 
 namespace ChapeauUI
 {
-    public partial class TableOptionUI : Form //don't forget todo error handler 
+    public partial class TableOptionUI : Form  
     {
         private Table table;
         private Employee loggedInEmployee;
         private TableService tableService;
-        public TableOptionUI(Table table, Employee employee) //I should Pass the Employee 
+        public TableOptionUI(Table table, Employee employee) 
         {
             InitializeComponent();
             this.table = table;
             this.loggedInEmployee = employee;
-            this.tableService = new TableService(); // Initialize the TableService
-            tableNumberlbl.Text= "Table: " +  table.TableNumber.ToString();
+            this.tableService = new TableService(); 
+            tableNumberlbl.Text = "Table: " + table.TableNumber.ToString();
 
         }
 
@@ -31,10 +31,9 @@ namespace ChapeauUI
         {
             TableView tableView = new TableView(loggedInEmployee);
             OpenUI(tableView);
-
-
         }
-        private void OpenUI(Form popUpForm) //check if there is a way instead of writing the same method in different UI
+
+        private void OpenUI(Form popUpForm)
         {
             Form activeForm = ActiveForm;
             activeForm.Hide();
@@ -46,35 +45,49 @@ namespace ChapeauUI
 
         private void reserveTablebtn_Click(object sender, EventArgs e)
         {
+            //I should add event listener to the button to check if there is a bill for this table or not before change the status
             try
             {
-                //check if the table has a bill or not
                 tableService.ReserveTable(table);
-                errorhandlerlbl.Text = "Table reserved successfully.";
-                errorhandlerlbl.ForeColor = Color.Yellow;                                                      
+                infolbl.Text = "Table reserved successfully.";
+                infolbl.ForeColor = Color.Yellow;
             }
             catch (InvalidOperationException ex)
             {
-                errorhandlerlbl.Text = ex.Message;
-                errorhandlerlbl.ForeColor = Color.Red;
+                infolbl.Text = ex.Message;
+                infolbl.ForeColor = Color.Red;
             }
 
         }
 
         private void FreeTablebtn_Click(object sender, EventArgs e)
         {
+            //I should add event listener to the button to check if there is a bill for this table or not before change the status
             try
             {
-                //check if the table has a bill or not
                 tableService.FreeTable(table);
-                errorhandlerlbl.Text = "Table is now available.";
-                errorhandlerlbl.ForeColor = Color.Yellow; 
-                                                       
+                infolbl.Text = "Table is now available.";
+                infolbl.ForeColor = Color.Yellow;
+
             }
             catch (InvalidOperationException ex)
             {
-                errorhandlerlbl.Text = ex.Message;
-                errorhandlerlbl.ForeColor = Color.Red; 
+                infolbl.Text = ex.Message;
+                infolbl.ForeColor = Color.Red;
+            }
+        }
+        private void occupybtn_Click(object sender, EventArgs e)
+        {
+            try 
+            { 
+                tableService.OccupyTable(table);
+                infolbl.Text = "Table is now Occupied.";
+                infolbl.ForeColor = Color.Yellow;
+            }
+            catch (InvalidOperationException ex)
+            {
+                infolbl.Text = ex.Message;
+                infolbl.ForeColor = Color.Red;
             }
         }
 
@@ -89,6 +102,7 @@ namespace ChapeauUI
             //OpenUI to the Payment Details
 
         }
-  
+
+      
     }
 }

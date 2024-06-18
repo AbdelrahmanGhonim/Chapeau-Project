@@ -7,7 +7,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using ChapeauModel;
-using NLog;
 
 
 namespace ChapeauDAL
@@ -15,10 +14,7 @@ namespace ChapeauDAL
     public class EmployeeDao : BaseDao
     {
         //        Waiter, Bartender, Chef, Manager
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-
-        public Employee GetEmployeeByUsername(string username) //check the name if it is lower or upper case, it should be case sensitive
+        public Employee GetEmployeeByUsername(string username) 
         {
             try
             {
@@ -41,9 +37,6 @@ namespace ChapeauDAL
             }
             catch (Exception ex)
             {
-                // Log the exception
-                Logger.Error(ex, $"Error fetching employee by username {username}: {ex.Message}");
-
                 throw new ApplicationException("An error occurred while fetching employee data.", ex);
             }
         }
@@ -67,15 +60,7 @@ namespace ChapeauDAL
         }
        
 
-   /*     public bool VerifyLogin(string username, string password)
-        {
-            string query = "SELECT Password FROM employee WHERE username = @username";
-            SqlParameter parameter = new SqlParameter("@username", username);
-            string hashedPasswordFromDB = ExecuteSelectQueryWithParameters(query, parameter).Rows[0]["PasswordHash"].ToString();
 
-            return BCrypt.Net.BCrypt.Verify(password, hashedPasswordFromDB);
-        }
-       */
     }
 }
 
