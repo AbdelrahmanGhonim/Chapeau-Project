@@ -48,6 +48,7 @@ namespace ChapeauUI
         {
             try
             {
+                //check if the table has a bill or not
                 tableService.ReserveTable(table);
                 errorhandlerlbl.Text = "Table reserved successfully.";
                 errorhandlerlbl.ForeColor = Color.Yellow;                                                      
@@ -64,6 +65,7 @@ namespace ChapeauUI
         {
             try
             {
+                //check if the table has a bill or not
                 tableService.FreeTable(table);
                 errorhandlerlbl.Text = "Table is now available.";
                 errorhandlerlbl.ForeColor = Color.Yellow; 

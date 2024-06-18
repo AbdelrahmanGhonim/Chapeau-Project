@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace ChapeauModel
 {
-   public enum  OrderStatus
+    public enum PaymentMethod
     {
-        Pending, InPreparation, Prepared, Served 
-
+        Cash, Debit, Visa
     }
 }
- 

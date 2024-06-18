@@ -10,10 +10,13 @@ namespace ChapeauModel
     public class OrderItem
     {
         public MenuItem MenuItem { get; set; }
-        public Order Order { get; set; }
+        public int OrderItemId { get; set; } // I added this
+       // public int OrderId { get; set; }//  I will change that to order object so we can access the OrderedTime and the ORderId okay!
+       public Order Order { get; set; }
         public int Quantity { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public string Comments { get; set; }
+       // public TimeSpan PreparationTime { get; set; }
 
 
         public OrderItem()

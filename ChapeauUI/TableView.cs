@@ -331,7 +331,7 @@ namespace ChapeauUI
         private void UpdateCountdown(ListViewItem listViewItem, OrderItem orderItem)
         {
             DateTime now = DateTime.Now;
-            DateTime targetTime = orderItem.ItemPlacedTime.Add(orderItem.PreparationTime);
+            DateTime targetTime = orderItem.Order.OrderTime.Add(orderItem.MenuItem.PreparationTime);
 
             TimeSpan timeLeft = targetTime - now;
 
@@ -353,7 +353,7 @@ namespace ChapeauUI
         private string GetCountdownString(OrderItem orderItem)
         {
             DateTime now = DateTime.Now;
-            DateTime targetTime = orderItem.ItemPlacedTime.Add(orderItem.PreparationTime);
+            DateTime targetTime = orderItem.Order.OrderTime.Add(orderItem.MenuItem.PreparationTime);
 
             TimeSpan timeLeft = targetTime - now;
 
