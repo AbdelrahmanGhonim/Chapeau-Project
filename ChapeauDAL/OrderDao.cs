@@ -66,7 +66,7 @@ namespace ChapeauDAL
 
             foreach (OrderItem item in order.OrderedItems)
             {
-                item.OrderId = orderId;
+                item.OrderId.OrderID = orderId;
             }
 
             AddOrderItems(order);
@@ -84,7 +84,7 @@ namespace ChapeauDAL
 
                     SqlParameter[] sqlParameters = new SqlParameter[]
                     {
-                    new SqlParameter("@orderID", item.OrderId),
+                    new SqlParameter("@orderID", item.OrderId.OrderID),
                     new SqlParameter("@itemID", item.MenuItem.ItemId),
                     new SqlParameter("@quantity", item.Quantity),
                     new SqlParameter("@comment", item.Comments)
@@ -110,7 +110,8 @@ namespace ChapeauDAL
                 OrderItem item = new OrderItem()
                 {
                     MenuItem = new MenuItem { ItemId = (int)dataRow["itemID"] },
-                    OrderId = (int)dataRow["orderID"],
+                    OrderId = new Order { OrderID = (int)dataRow["orderID"] },
+                    //OrderId = (int)dataRow["orderID"],
                     Quantity = (int)dataRow["quantity"],
                     Comments = (string)dataRow["comment"],
                 };

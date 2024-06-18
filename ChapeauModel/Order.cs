@@ -16,6 +16,10 @@ namespace ChapeauModel
         public int BillID { get; set; } // Bill object
         public List<OrderItem> OrderedItems { get; set; }
 
+        public Order()
+        {
+            
+        }
         public Order(Table table, Employee employee)
         {
             this.TableNumber = table;
