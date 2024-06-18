@@ -116,7 +116,6 @@ namespace ChapeauDAL
                 {
                     MenuItem = new MenuItem { ItemId = (int)dataRow["itemID"] },
                     Order = new Order { OrderID = (int)dataRow["orderID"] },
-                    //OrderId = (int)dataRow["orderID"],
                     Quantity = (int)dataRow["quantity"],
                     Comments = (string)dataRow["comment"],
                 };
