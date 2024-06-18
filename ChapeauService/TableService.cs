@@ -32,12 +32,12 @@ namespace ChapeauService
 
         public void CheckAndSetTableStatus(Table table)
         {
-            bool allItemsServed = orderDao.GetOrderItems(table).All(item => item.OrderStatus == OrderStatus.Served);
+           /* bool allItemsServed = orderDao.GetOrderItems(table).All(item => item.OrderStatus == OrderStatus.Served);
             if (allItemsServed)
             {
                 table.Status = TableStatus.Occupied;
             }
-            UpdateTableStatus(table);
+            UpdateTableStatus(table);*/
         }
 
         public void ReserveTable(Table table)
@@ -79,12 +79,12 @@ namespace ChapeauService
 
         private void CheckForUnpaidOrderItems(Table table) //TODO: Ask Luca about how they check if if the order is payed or not 
         {
-            List<OrderItem> unpaidItems = orderDao.GetOrderItems(table).ToList();
+           /* List<OrderItem> unpaidItems = orderDao.GetOrderItems(table).ToList();
                                            
             if (unpaidItems.Any())
             {
                 throw new InvalidOperationException("Order table is unpaid!");
-            }
+            }*/
         }
 
     }

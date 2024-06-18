@@ -16,13 +16,15 @@ namespace ChapeauModel
         public int BillID { get; set; } // Bill object
         public List<OrderItem> OrderedItems { get; set; }
 
-        public Order(Table table)
+        public Order(Table table,Employee employee)
         {
             this.TableNumber = table;
-            //this.Employee = employee;
+            this.Employee = employee;
             this.OrderedItems = new List<OrderItem>();
             this.OrderTime = DateTime.Now;
         }
 
+
+        public Order() { }
     }
 }

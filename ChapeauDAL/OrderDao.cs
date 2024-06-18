@@ -17,12 +17,13 @@ namespace ChapeauDAL
         {
                menuItemsDao = new MenuItemsDao();
         }
-        public List<OrderItem> GetOrderItems(Table table) //TODO: don't use the * 
+        public List<OrderItem> GetOrderItems(Table table)
         {
-            string query = "  SELECT oi.*" +
-                    " FROM [dbo].[ORDER] o      " +
-                    " JOIN [dbo].[OrderedItems] oi ON o.orderID = oi.orderID " +
-                    " WHERE o.tableNumber = @tableNumber";
+            string query = "SELECT oi.orderItemID, mi.name AS ItemName, oi.OrderStatus, mi.PreparationTime, o.OrderDateTime " +
+                   "FROM [dbo].[OrderedItems] oi " +
+                   "JOIN [dbo].[menuItem] mi ON oi.itemID = mi.itemID " +
+                   "JOIN [dbo].[ORDER] o ON oi.orderID = o.orderID " +
+                   "WHERE o.tableNumber = @tableNumber";
 
             SqlParameter[] parameters = new SqlParameter[1]// check it later
       {
@@ -47,17 +48,18 @@ namespace ChapeauDAL
             ExecuteEditQuery(updateQuery, sqlParameters);
         }
 
+
         public void AddOrder(Order order)
         {
-            string query = "INSERT INTO [dbo].[Order] (tableNumber, billID, orderDateTime) " +
-                           "VALUES (@tableNumber, @billID, @orderDateTime); " +
+            string query = "INSERT INTO [dbo].[Order] (tableNumber, orderDateTime, employee) " +
+                           "VALUES (@tableNumber, @orderDateTime, @employee); " +
                            "SELECT SCOPE_IDENTITY();";
 
             SqlParameter[] parameters = new SqlParameter[]
             {
-        new SqlParameter("@tableNumber", order.TableNumber.TableNumber),
-        new SqlParameter("@billID", order.BillID),
-        new SqlParameter("@orderDateTime", order.OrderTime)
+                new SqlParameter("@tableNumber", order.TableNumber.TableNumber),
+                new SqlParameter("@orderDateTime", order.OrderTime),
+                new SqlParameter("@employee", order.Employee.EmployeeId)
             };
 
             int orderId = ExecuteEditQueryReturnId(query, parameters);
@@ -66,7 +68,7 @@ namespace ChapeauDAL
 
             foreach (OrderItem item in order.OrderedItems)
             {
-                item.OrderId = orderId;
+                item.Order.OrderID = orderId;
             }
 
             AddOrderItems(order);
@@ -84,7 +86,7 @@ namespace ChapeauDAL
 
                     SqlParameter[] sqlParameters = new SqlParameter[]
                     {
-                    new SqlParameter("@orderID", item.OrderId),
+                    new SqlParameter("@orderID", item.Order.OrderID),
                     new SqlParameter("@itemID", item.MenuItem.ItemId),
                     new SqlParameter("@quantity", item.Quantity),
                     new SqlParameter("@comment", item.Comments)
@@ -109,10 +111,12 @@ namespace ChapeauDAL
             {
                 OrderItem item = new OrderItem()
                 {
-                    MenuItem = new MenuItem { ItemId = (int)dataRow["itemID"] },
-                    OrderId = (int)dataRow["orderID"],
-                    Quantity = (int)dataRow["quantity"],
-                    Comments = (string)dataRow["comment"],
+                    OrderItemId = (int)dataRow["orderItemID"],
+                    MenuItem = new MenuItem { Name = (string)dataRow["ItemName"],// 
+                        PreparationTime = (TimeSpan)dataRow["PreparationTime"],
+                    },
+                    OrderStatus = (OrderStatus)Enum.Parse(typeof(OrderStatus), dataRow["OrderStatus"].ToString()),
+                    Order = new Order { OrderTime = (DateTime)dataRow["orderDateTime"] }
                 };
                 orderItems.Add(item);
             }
