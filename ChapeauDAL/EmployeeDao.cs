@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using ChapeauModel;
+using NLog;
 
 
 namespace ChapeauDAL
@@ -14,28 +15,40 @@ namespace ChapeauDAL
     public class EmployeeDao : BaseDao
     {
         //        Waiter, Bartender, Chef, Manager
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-         
+
         public Employee GetEmployeeByUsername(string username) //check the name if it is lower or upper case, it should be case sensitive
         {
-            string query = "SELECT employee_id,username,firstname, lastname, EmployeeRole, password FROM employee WHERE username=@username";
-
-            SqlParameter[] sqlParameters = new SqlParameter[1]
+            try
             {
+                string query = "SELECT employee_id,username,firstname, lastname, EmployeeRole, password FROM employee WHERE username=@username";
+
+                SqlParameter[] sqlParameters = new SqlParameter[1]
+                {
                 new SqlParameter("@username",username)
-            };
-            DataTable dataTable=ExecuteSelectQueryWithParameters(query, sqlParameters);
+                };
+                DataTable dataTable = ExecuteSelectQueryWithParameters(query, sqlParameters);
 
-            if (dataTable.Rows.Count == 0)//nothing found
+                if (dataTable.Rows.Count == 0)//nothing found
+                {
+                    return null;
+                }
+                else
+                {
+                    return ReadEmployee(dataTable);
+                }
+            }
+            catch (Exception ex)
             {
-                return null;
-            }
-            else
-            { 
-            return ReadEmployee(dataTable);
-            }
+                // Log the exception
+                Logger.Error(ex, $"Error fetching employee by username {username}: {ex.Message}");
 
+                throw new ApplicationException("An error occurred while fetching employee data.", ex);
+            }
         }
+
+
 
         private Employee ReadEmployee(DataTable data)
         {
@@ -54,7 +67,7 @@ namespace ChapeauDAL
         }
        
 
-        public bool VerifyLogin(string username, string password)
+   /*     public bool VerifyLogin(string username, string password)
         {
             string query = "SELECT Password FROM employee WHERE username = @username";
             SqlParameter parameter = new SqlParameter("@username", username);
@@ -62,7 +75,7 @@ namespace ChapeauDAL
 
             return BCrypt.Net.BCrypt.Verify(password, hashedPasswordFromDB);
         }
-       
+       */
     }
 }
 
