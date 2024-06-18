@@ -11,7 +11,7 @@ namespace ChapeauDAL
 {
     public class OrderDao : BaseDao
     {
-        private  MenuItemsDao menuItemsDao;
+        private MenuItemsDao menuItemsDao;
         private TableDao tableDao;
 
         public OrderDao()
@@ -19,14 +19,15 @@ namespace ChapeauDAL
                menuItemsDao = new MenuItemsDao();
                tableDao = new TableDao();
         }
-        public List<OrderItem> GetOrderItems(Table table) //TODO: don't use the * 
+        public List<OrderItem> GetOrderItems(Table table)
         {
-            string query = "  SELECT oi.*" +
-                    " FROM [dbo].[ORDER] o      " +
-                    " JOIN [dbo].[OrderedItems] oi ON o.orderID = oi.orderID " +
-                    " WHERE o.tableNumber = @tableNumber";
+            string query = "SELECT oi.itemID, mi.name AS ItemName, oi.OrderStatus, mi.PreparationTime, o.OrderDateTime " +
+                   "FROM [dbo].[OrderedItems] oi " +
+                   "JOIN [dbo].[menuItem] mi ON oi.itemID = mi.itemID " +
+                   "JOIN [dbo].[ORDER] o ON oi.orderID = o.orderID " +
+                   "WHERE o.tableNumber = @tableNumber";
 
-            SqlParameter[] parameters = new SqlParameter[1]// check it later
+            SqlParameter[] parameters = new SqlParameter[1]
       {
                     new SqlParameter("@tableNumber", table.TableNumber)
       };
@@ -40,7 +41,7 @@ namespace ChapeauDAL
         {
             string updateQuery = "UPDATE OrderedItems SET OrderStatus = @OrderStatus WHERE itemID = @itemID";
 
-            SqlParameter[] sqlParameters = new SqlParameter[]
+            SqlParameter[] sqlParameters = new SqlParameter[2]
             {
             new SqlParameter("@OrderStatus", item.OrderStatus.ToString()),
             new SqlParameter("@itemID", item.MenuItem.ItemId)
@@ -115,10 +116,15 @@ namespace ChapeauDAL
             {
                 OrderItem item = new OrderItem()
                 {
-                    MenuItem = new MenuItem { ItemId = (int)dataRow["itemID"] },
-                    Order = new Order { OrderID = (int)dataRow["orderID"] },
-                    Quantity = (int)dataRow["quantity"],
-                    Comments = (string)dataRow["comment"],
+                    /*OrderItemId = (int)dataRow["orderItemID"],*/
+                    MenuItem = new MenuItem
+                    {
+                        Name = (string)dataRow["ItemName"],// 
+                        PreparationTime = (TimeSpan)dataRow["PreparationTime"],
+                        ItemId = (int)dataRow["itemID"],
+                    },
+                    OrderStatus = (OrderStatus)Enum.Parse(typeof(OrderStatus), dataRow["OrderStatus"].ToString()),
+                    Order = new Order { OrderTime = (DateTime)dataRow["orderDateTime"] }
                 };
                 orderItems.Add(item);
             }

@@ -16,5 +16,6 @@ namespace ChapeauModel
         public decimal VAT { get; set; }
         public MenuItemType MenuItemType { get; set; }
         public Category Category { get; set; }
+        public TimeSpan PreparationTime { get; set; }
     }
 }
