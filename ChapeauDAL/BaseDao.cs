@@ -82,28 +82,7 @@ namespace ChapeauDAL
                 }
             }
         }
-        protected object ExecuteEditQueryReturnObject(string query, SqlParameter[] sqlParameters)
-        {
-            using (SqlCommand command = new SqlCommand())
-            {
-                try
-                {
-                    command.Connection = OpenConnection();
-                    command.CommandText = query;
-                    command.Parameters.AddRange(sqlParameters);
-                    object result = command.ExecuteScalar();
-                    return result;
-                }
-                catch (SqlException e)
-                {
-                    throw new Exception(e.Message);
-                }
-                finally
-                {
-                    CloseConnection();
-                }
-            }
-        }
+
 
         /* For Select Queries with sql parameters */ //this one returns based on an id or smth like that
         protected DataTable ExecuteSelectQueryWithParameters(string query, params SqlParameter[] sqlParameters)
