@@ -20,6 +20,10 @@ namespace ChapeauService
         {
             return menuItemsDao.GetMenuItemById(itemId);
         }
+        public int GetCurrentStock(int itemId)
+        {
+             return menuItemsDao.GetCurrentStock(itemId);
+        }
         public List<MenuItem> GetMenuItemsByType(MenuItemType menuItemType)
         {
             return menuItemsDao.GetMenuItemsByType(menuItemType);

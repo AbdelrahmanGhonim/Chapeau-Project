@@ -41,24 +41,28 @@ namespace ChapeauDAL
         }
         public void UpdateStock(int itemId, int quantity)
         {
-            string sql = "UPDATE menuItem SET stockLeft = stockLeft - @quantity WHERE itemID = @itemId";
+            string query = "UPDATE menuItem SET stockLeft = stockLeft - @Quantity WHERE itemID = @ItemId";
 
-            SqlParameter[] sqlParameters = new SqlParameter[]
-            {
-            new SqlParameter("@quantity", SqlDbType.Int) { Value = quantity },
-            new SqlParameter("@itemId", SqlDbType.Int) { Value = itemId }
-            };
+            SqlParameter[] parameters = {
+            new SqlParameter("@Quantity", quantity),
+            new SqlParameter("@ItemId", itemId)
+        };
 
-            try
-            {
-                ExecuteEditQuery(sql, sqlParameters);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error updating stock: " + ex.Message);
-                throw;
-            }
+            ExecuteEditQuery(query, parameters);
         }
+
+
+        public int GetCurrentStock(int itemId)
+        {
+            string query = "SELECT stockLeft FROM menuItem WHERE itemID = @ItemId";
+
+            SqlParameter[] parameters = {
+            new SqlParameter("@ItemId", itemId)
+        };
+
+            return ExecuteScalarQuery<int>(query, parameters, 0);
+        }
+
         public MenuItem GetMenuItemById(int itemId)
         {
             string sql = "SELECT mi.itemID, mi.menuId, mi.name, mi.price, mi.stockLeft, mi.menuCategory, m.menuType " +
@@ -68,7 +72,7 @@ namespace ChapeauDAL
 
             SqlParameter[] sqlParameters = new SqlParameter[]
             {
-            new SqlParameter("@itemId", SqlDbType.Int) { Value = itemId }
+                new SqlParameter("@itemId", SqlDbType.Int) { Value = itemId }
             };
 
             try
@@ -150,6 +154,7 @@ namespace ChapeauDAL
 
             return menuItems;
         }
+
     }
 
 }

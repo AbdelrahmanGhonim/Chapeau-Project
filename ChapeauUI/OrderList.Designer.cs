@@ -38,7 +38,7 @@
             columnHeader1 = new ColumnHeader();
             columnHeader2 = new ColumnHeader();
             columnHeader3 = new ColumnHeader();
-            addBtn = new Button();
+            btnAdd = new Button();
             dinnerBtn = new Button();
             label2 = new Label();
             btnRemoveAll = new Button();
@@ -80,9 +80,9 @@
             roleLbl.BackColor = Color.FromArgb(25, 123, 189);
             roleLbl.Location = new Point(458, 18);
             roleLbl.Name = "roleLbl";
-            roleLbl.Size = new Size(125, 32);
+            roleLbl.Size = new Size(76, 32);
             roleLbl.TabIndex = 2;
-            roleLbl.Text = "Waitress: ";
+            roleLbl.Text = "Waitr";
             // 
             // tableViewBtn
             // 
@@ -95,6 +95,7 @@
             tableViewBtn.TabIndex = 3;
             tableViewBtn.Text = "Table View";
             tableViewBtn.UseVisualStyleBackColor = false;
+            tableViewBtn.Click += tableViewBtn_Click;
             // 
             // lunchBtn
             // 
@@ -148,19 +149,19 @@
             columnHeader3.Text = "Comment";
             columnHeader3.Width = 197;
             // 
-            // addBtn
+            // btnAdd
             // 
-            addBtn.BackColor = Color.FromArgb(6, 167, 125);
-            addBtn.Font = new Font("Segoe UI", 10.125F, FontStyle.Bold, GraphicsUnit.Point);
-            addBtn.ForeColor = Color.White;
-            addBtn.Location = new Point(700, 1212);
-            addBtn.Name = "addBtn";
-            addBtn.Size = new Size(178, 60);
-            addBtn.TabIndex = 9;
-            addBtn.Text = "ADD";
-            addBtn.UseVisualStyleBackColor = false;
-            addBtn.Visible = false;
-            addBtn.Click += addBtn_Click;
+            btnAdd.BackColor = Color.FromArgb(6, 167, 125);
+            btnAdd.Font = new Font("Segoe UI", 10.125F, FontStyle.Bold, GraphicsUnit.Point);
+            btnAdd.ForeColor = Color.White;
+            btnAdd.Location = new Point(700, 1212);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(178, 60);
+            btnAdd.TabIndex = 9;
+            btnAdd.Text = "ADD";
+            btnAdd.UseVisualStyleBackColor = false;
+            btnAdd.Visible = false;
+            btnAdd.Click += btnAdd_Click;
             // 
             // dinnerBtn
             // 
@@ -316,7 +317,7 @@
             Controls.Add(label2);
             Controls.Add(flowLayoutPanelMenu);
             Controls.Add(dinnerBtn);
-            Controls.Add(addBtn);
+            Controls.Add(btnAdd);
             Controls.Add(listViewOrder);
             Controls.Add(drinksBtn);
             Controls.Add(lunchBtn);
@@ -345,7 +346,7 @@
         private Button button1;
         private Button drinksBtn;
         private ListView listViewOrder;
-        private Button addBtn;
+        private Button btnAdd;
         private Button dinnerBtn;
         private Label label2;
         private ColumnHeader columnHeader1;

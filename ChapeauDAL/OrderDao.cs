@@ -12,10 +12,12 @@ namespace ChapeauDAL
     public class OrderDao : BaseDao
     {
         private  MenuItemsDao menuItemsDao;
+        private TableDao tableDao;
 
         public OrderDao()
         {
                menuItemsDao = new MenuItemsDao();
+               tableDao = new TableDao();
         }
         public List<OrderItem> GetOrderItems(Table table) //TODO: don't use the * 
         {
@@ -60,7 +62,7 @@ namespace ChapeauDAL
                 new SqlParameter("@employee", order.Employee.EmployeeId)
             };
 
-            int orderId = ExecuteEditQueryReturnId(query, parameters);
+            int orderId = ExecuteScalarQuery<int>(query, parameters);
 
             order.OrderID = orderId;
 
@@ -75,6 +77,9 @@ namespace ChapeauDAL
             }
 
             AddOrderItems(order);
+
+            order.TableNumber.Status = TableStatus.Ordered;
+            tableDao.UpdateTableStatus(order.TableNumber);
         }
 
 
@@ -123,5 +128,6 @@ namespace ChapeauDAL
             }
             return orderItems;
         }
+
     }
 }
