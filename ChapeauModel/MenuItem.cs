@@ -18,6 +18,7 @@ namespace ChapeauModel
         public TimeSpan PreparationTime { get; set; }
 
         public Category Category { get; set; }
+
     }
 }
 //

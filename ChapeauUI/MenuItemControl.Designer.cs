@@ -24,22 +24,22 @@
             // lblName
             // 
             lblName.AutoSize = true;
-            lblName.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            lblName.Font = new Font("Microsoft Sans Serif", 7.875F, FontStyle.Regular, GraphicsUnit.Point);
             lblName.Location = new Point(19, 11);
             lblName.Margin = new Padding(6, 0, 6, 0);
             lblName.Name = "lblName";
-            lblName.Size = new Size(78, 29);
+            lblName.Size = new Size(68, 25);
             lblName.TabIndex = 0;
             lblName.Text = "Name";
             // 
             // lblPrice
             // 
             lblPrice.AutoSize = true;
-            lblPrice.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            lblPrice.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point);
             lblPrice.Location = new Point(668, 8);
             lblPrice.Margin = new Padding(6, 0, 6, 0);
             lblPrice.Name = "lblPrice";
-            lblPrice.Size = new Size(76, 31);
+            lblPrice.Size = new Size(69, 29);
             lblPrice.TabIndex = 1;
             lblPrice.Text = "Price";
             // 

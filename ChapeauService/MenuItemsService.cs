@@ -20,47 +20,13 @@ namespace ChapeauService
         {
             return menuItemsDao.GetMenuItemById(itemId);
         }
+        public int GetCurrentStock(int itemId)
+        {
+             return menuItemsDao.GetCurrentStock(itemId);
+        }
         public List<MenuItem> GetMenuItemsByType(MenuItemType menuItemType)
         {
             return menuItemsDao.GetMenuItemsByType(menuItemType);
-        }
-        private List<Category> GetDrinks()
-        {
-            List<Category> drinks = new List<Category>();
-            drinks.Add(Category.SoftDrinks);
-            drinks.Add(Category.BeersOnTap);
-            drinks.Add(Category.Wines);
-            drinks.Add(Category.SpiritDrinks);
-            drinks.Add(Category.CoffeeTea);
-            return drinks;
-        }
-
-        private List<Category> GetLunch()
-        {
-            List<Category> lunch = new List<Category>();
-            lunch.Add(Category.Starters);
-            lunch.Add(Category.MainDishes);
-            lunch.Add(Category.Desserts);
-            return lunch;
-        }
-        private List<Category> GetDinner()
-        {
-            List<Category> dinner = new List<Category>();
-            dinner.Add(Category.Starters);
-            dinner.Add(Category.Entremets);
-            dinner.Add(Category.MainDishes);
-            dinner.Add(Category.Desserts);
-            return dinner;
-        }
-        public List<Category> GetMenuItemType(MenuItemType menuItemType)
-        {
-            switch (menuItemType)
-            {
-                case MenuItemType.Dinner: return GetDinner();
-                case MenuItemType.Lunch: return GetLunch();
-                case MenuItemType.Drinks: return GetDrinks();
-                default: throw new NotImplementedException();
-            }
         }
     }
 }
