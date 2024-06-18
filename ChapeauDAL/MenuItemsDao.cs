@@ -20,7 +20,7 @@ namespace ChapeauDAL
 
             SqlParameter[] sqlParameters = new SqlParameter[]
             {
-            new SqlParameter("@menuType", SqlDbType.NVarChar) { Value = menuItemType.ToString() }
+                new SqlParameter("@menuType", menuItemType.ToString())
             };
 
             try
@@ -51,7 +51,6 @@ namespace ChapeauDAL
             ExecuteEditQuery(query, parameters);
         }
 
-
         public int GetCurrentStock(int itemId)
         {
             string query = "SELECT stockLeft FROM menuItem WHERE itemID = @ItemId";
@@ -62,7 +61,6 @@ namespace ChapeauDAL
 
             return ExecuteScalarQuery<int>(query, parameters, 0);
         }
-
         public MenuItem GetMenuItemById(int itemId)
         {
             string sql = "SELECT mi.itemID, mi.menuId, mi.name, mi.price, mi.stockLeft, mi.menuCategory, m.menuType " +
@@ -72,7 +70,7 @@ namespace ChapeauDAL
 
             SqlParameter[] sqlParameters = new SqlParameter[]
             {
-                new SqlParameter("@itemId", SqlDbType.Int) { Value = itemId }
+                new SqlParameter("@ItemId", itemId)
             };
 
             try

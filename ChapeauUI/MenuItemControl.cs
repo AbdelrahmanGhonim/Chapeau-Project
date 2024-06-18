@@ -44,7 +44,7 @@ namespace ChapeauUI
         {
             this.MenuItemId = menuItemId;
             this.Name = name;
-            this.Price = price.ToString("C");
+            this.Price = price.ToString("C", new CultureInfo("nl-NL"));
         }
     }
 

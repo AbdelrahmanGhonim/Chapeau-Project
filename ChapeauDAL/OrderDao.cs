@@ -81,8 +81,6 @@ namespace ChapeauDAL
             order.TableNumber.Status = TableStatus.Ordered;
             tableDao.UpdateTableStatus(order.TableNumber);
         }
-
-
         public void AddOrderItems(Order order)
         {
             try
@@ -110,8 +108,6 @@ namespace ChapeauDAL
                 throw new Exception($"Error adding order items: {ex.Message}");
             }
         }
-
-
         private List<OrderItem> ReadOrderItems(DataTable data)
         {
             List<OrderItem> orderItems = new List<OrderItem>();

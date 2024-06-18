@@ -30,7 +30,7 @@
         {
             label1 = new Label();
             logOutBtn = new Button();
-            roleLbl = new Label();
+            lblRole = new Label();
             tableViewBtn = new Button();
             lunchBtn = new Button();
             drinksBtn = new Button();
@@ -74,15 +74,14 @@
             logOutBtn.UseVisualStyleBackColor = true;
             logOutBtn.Click += logOutBtn_Click;
             // 
-            // roleLbl
+            // lblRole
             // 
-            roleLbl.AutoSize = true;
-            roleLbl.BackColor = Color.FromArgb(25, 123, 189);
-            roleLbl.Location = new Point(458, 18);
-            roleLbl.Name = "roleLbl";
-            roleLbl.Size = new Size(76, 32);
-            roleLbl.TabIndex = 2;
-            roleLbl.Text = "Waitr";
+            lblRole.AutoSize = true;
+            lblRole.BackColor = Color.FromArgb(25, 123, 189);
+            lblRole.Location = new Point(479, 18);
+            lblRole.Name = "lblRole";
+            lblRole.Size = new Size(0, 32);
+            lblRole.TabIndex = 2;
             // 
             // tableViewBtn
             // 
@@ -152,7 +151,7 @@
             // btnAdd
             // 
             btnAdd.BackColor = Color.FromArgb(6, 167, 125);
-            btnAdd.Font = new Font("Segoe UI", 10.125F, FontStyle.Bold, GraphicsUnit.Point);
+            btnAdd.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
             btnAdd.ForeColor = Color.White;
             btnAdd.Location = new Point(700, 1212);
             btnAdd.Name = "btnAdd";
@@ -188,13 +187,13 @@
             // btnRemoveAll
             // 
             btnRemoveAll.BackColor = Color.DarkRed;
-            btnRemoveAll.Font = new Font("Segoe UI", 10.125F, FontStyle.Bold, GraphicsUnit.Point);
+            btnRemoveAll.Font = new Font("Segoe UI", 7.875F, FontStyle.Bold, GraphicsUnit.Point);
             btnRemoveAll.ForeColor = Color.White;
-            btnRemoveAll.Location = new Point(504, 1212);
+            btnRemoveAll.Location = new Point(516, 1212);
             btnRemoveAll.Name = "btnRemoveAll";
             btnRemoveAll.Size = new Size(178, 60);
             btnRemoveAll.TabIndex = 15;
-            btnRemoveAll.Text = "REMOVE";
+            btnRemoveAll.Text = "REMOVE ALL";
             btnRemoveAll.UseVisualStyleBackColor = false;
             btnRemoveAll.Visible = false;
             btnRemoveAll.Click += btnRemoveAll_Click;
@@ -202,9 +201,9 @@
             // btnComment
             // 
             btnComment.BackColor = Color.Goldenrod;
-            btnComment.Font = new Font("Segoe UI", 10.125F, FontStyle.Bold, GraphicsUnit.Point);
+            btnComment.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
             btnComment.ForeColor = Color.White;
-            btnComment.Location = new Point(304, 1212);
+            btnComment.Location = new Point(332, 1212);
             btnComment.Name = "btnComment";
             btnComment.Size = new Size(178, 60);
             btnComment.TabIndex = 16;
@@ -218,11 +217,11 @@
             btnRemove.BackColor = Color.DarkRed;
             btnRemove.Font = new Font("Segoe UI", 10.125F, FontStyle.Bold, GraphicsUnit.Point);
             btnRemove.ForeColor = Color.White;
-            btnRemove.Location = new Point(504, 1212);
+            btnRemove.Location = new Point(137, 1212);
             btnRemove.Name = "btnRemove";
-            btnRemove.Size = new Size(178, 60);
+            btnRemove.Size = new Size(82, 60);
             btnRemove.TabIndex = 17;
-            btnRemove.Text = "REMOVE";
+            btnRemove.Text = "X";
             btnRemove.UseVisualStyleBackColor = false;
             btnRemove.Visible = false;
             btnRemove.Click += btnRemove_Click;
@@ -322,12 +321,13 @@
             Controls.Add(drinksBtn);
             Controls.Add(lunchBtn);
             Controls.Add(tableViewBtn);
-            Controls.Add(roleLbl);
+            Controls.Add(lblRole);
             Controls.Add(logOutBtn);
             Controls.Add(label1);
             Controls.Add(btnRemove);
             Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Name = "OrderList";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "OrderList";
             ((System.ComponentModel.ISupportInitialize)numQuantity).EndInit();
             pnlComment.ResumeLayout(false);
@@ -340,7 +340,7 @@
 
         private Label label1;
         private Button logOutBtn;
-        private Label roleLbl;
+        private Label lblRole;
         private Button tableViewBtn;
         private Button lunchBtn;
         private Button button1;

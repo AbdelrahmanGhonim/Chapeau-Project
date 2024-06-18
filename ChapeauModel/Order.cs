@@ -13,13 +13,9 @@ namespace ChapeauModel
         public DateTime OrderTime { get; set; }
         public Employee Employee { get; set; }
         public Table TableNumber { get; set; }
-        public int BillID { get; set; } // Bill object
         public List<OrderItem> OrderedItems { get; set; }
 
-        public Order()
-        {
-            
-        }
+        public Order(){}
         public Order(Table table, Employee employee)
         {
             this.TableNumber = table;
