@@ -9,14 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NLog;
 
 
 namespace ChapeauUI
 {
     public partial class Login : Form
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public Login()
         {
@@ -49,8 +47,10 @@ namespace ChapeauUI
             }
             catch (Exception ex)
             {
-                invalidcredentiallbl.Text = "An unexpected error occurred. Please try again later.";
-                Logger.Error(ex, "Unexpected error during login: " + ex.Message);
+                ActivityLogger logger = new ActivityLogger();
+                logger.Log($"Error during login for username {usernameTxt.Text}: {ex.Message}", "ERROR");
+
+                invalidcredentiallbl.Text = "An unexpected error occurred. Please try again later.";               
             }
         }
 

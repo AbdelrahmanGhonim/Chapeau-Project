@@ -11,13 +11,13 @@ namespace ChapeauDAL
 {
     public class OrderDao : BaseDao
     {
-        private MenuItemsDao menuItemsDao;
+        private  MenuItemsDao menuItemsDao;
         private TableDao tableDao;
 
         public OrderDao()
         {
-            menuItemsDao = new MenuItemsDao();
-            tableDao = new TableDao();
+               menuItemsDao = new MenuItemsDao();
+                 tableDao = new TableDao();
 
         }
         public List<OrderItem> GetOrderItems(Table table)
@@ -65,7 +65,7 @@ namespace ChapeauDAL
                 new SqlParameter("@employee", order.Employee.EmployeeId)
             };
 
-            int orderId = ExecuteScalarQuery<int>(query, parameters);
+            int orderId = ExecuteEditQueryReturnId(query, parameters);
 
             order.OrderID = orderId;
 
@@ -123,9 +123,7 @@ namespace ChapeauDAL
                 OrderItem item = new OrderItem()
                 {
                     /*OrderItemId = (int)dataRow["orderItemID"],*/
-                    MenuItem = new MenuItem
-                    {
-                        Name = (string)dataRow["ItemName"],// 
+                    MenuItem = new MenuItem { Name = (string)dataRow["ItemName"],// 
                         PreparationTime = (TimeSpan)dataRow["PreparationTime"],
                         ItemId = (int)dataRow["itemID"],
                     },
