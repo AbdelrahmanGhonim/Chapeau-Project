@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ChapeauModel
 {
-    public enum  MenuType
+    public enum PaymentMethod
     {
-        Lunch,Dinner, Alcoholic, NonAlcoholic
+        Cash, Debit, Visa
     }
 }

@@ -11,36 +11,109 @@ namespace ChapeauDAL
 {
     public class OrderDao : BaseDao
     {
-        public List<OrderItem> GetOrderItems(Table table) //TODO: don't use the * 
-        {
-            string query = "  SELECT oi.*" +
-                    " FROM [dbo].[ORDER] o      " +
-                    " JOIN [dbo].[orderItems] oi ON o.orderID = oi.orderID " +
-                    " WHERE o.tableNumber = @tableNumber";
+        private  MenuItemsDao menuItemsDao;
+        private TableDao tableDao;
 
-                    SqlParameter[] parameters = new SqlParameter[1]// check it later
-              {
+        public OrderDao()
+        {
+               menuItemsDao = new MenuItemsDao();
+                 tableDao = new TableDao();
+
+        }
+        public List<OrderItem> GetOrderItems(Table table)
+        {
+            string query = "SELECT oi.itemID, mi.name AS ItemName, oi.OrderStatus, mi.PreparationTime, o.OrderDateTime " +
+                   "FROM [dbo].[OrderedItems] oi " +
+                   "JOIN [dbo].[menuItem] mi ON oi.itemID = mi.itemID " +
+                   "JOIN [dbo].[ORDER] o ON oi.orderID = o.orderID " +
+                   "WHERE o.tableNumber = @tableNumber";
+
+            SqlParameter[] parameters = new SqlParameter[1]
+      {
                     new SqlParameter("@tableNumber", table.TableNumber)
-              };
+      };
 
             return ReadOrderItems(ExecuteSelectQueryWithParameters(query, parameters));
 
 
         }
 
-
         public void UpdateOrderItemStatus(OrderItem item)
         {
-            string updateQuery = "UPDATE orderItems SET OrderStatus = @OrderStatus WHERE itemID = @itemID";
+            string updateQuery = "UPDATE OrderedItems SET OrderStatus = @OrderStatus WHERE itemID = @itemID";
 
-            SqlParameter[] sqlParameters = new SqlParameter[]
+            SqlParameter[] sqlParameters = new SqlParameter[2]
             {
             new SqlParameter("@OrderStatus", item.OrderStatus.ToString()),
-            new SqlParameter("@itemID", item.ItemID)
+            new SqlParameter("@itemID", item.MenuItem.ItemId)
             };
 
             ExecuteEditQuery(updateQuery, sqlParameters);
         }
+
+
+        public void AddOrder(Order order)
+        {
+            string query = "INSERT INTO [dbo].[Order] (tableNumber, orderDateTime, employee) " +
+                           "VALUES (@tableNumber, @orderDateTime, @employee); " +
+                           "SELECT SCOPE_IDENTITY();";
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@tableNumber", order.TableNumber.TableNumber),
+                new SqlParameter("@orderDateTime", order.OrderTime),
+                new SqlParameter("@employee", order.Employee.EmployeeId)
+            };
+
+            int orderId = ExecuteEditQueryReturnId(query, parameters);
+
+            order.OrderID = orderId;
+
+            foreach (OrderItem item in order.OrderedItems)
+            {
+                if (item.Order == null)
+                {
+                    item.Order = new Order();
+                }
+
+                item.Order.OrderID = orderId;
+            }
+
+            AddOrderItems(order);
+
+            order.TableNumber.Status = TableStatus.Ordered;
+            tableDao.UpdateTableStatus(order.TableNumber);
+        }
+
+
+        public void AddOrderItems(Order order)
+        {
+            try
+            {
+                foreach (OrderItem item in order.OrderedItems)
+                {
+                    string query = "INSERT INTO [dbo].[OrderedItems] (orderID, itemID, quantity, comment) " +
+                                   "VALUES (@orderID, @itemID, @quantity, @comment)";
+
+                    SqlParameter[] sqlParameters = new SqlParameter[]
+                    {
+                    new SqlParameter("@orderID", item.Order.OrderID),
+                    new SqlParameter("@itemID", item.MenuItem.ItemId),
+                    new SqlParameter("@quantity", item.Quantity),
+                    new SqlParameter("@comment", item.Comments)
+                    };
+
+                    ExecuteEditQuery(query, sqlParameters);
+
+                    menuItemsDao.UpdateStock(item.MenuItem.ItemId, item.Quantity);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error adding order items: {ex.Message}");
+            }
+        }
+
 
         private List<OrderItem> ReadOrderItems(DataTable data)
         {
@@ -49,24 +122,17 @@ namespace ChapeauDAL
             {
                 OrderItem item = new OrderItem()
                 {
-                    ItemID = (int)dataRow["itemID"],
-                    OrderId = (int)dataRow["orderID"],
-                    Quantity = (int)dataRow["quantity"],
-                    StockQuantity = (int)dataRow["stockQuantity"],
-                    ItemName = (string)dataRow["orderName"],
-                    OrderStatus = (OrderStatus)Enum.Parse(typeof(OrderStatus), (string)dataRow["OrderStatus"]),
-                    Price = (decimal)dataRow["price"],
-                    VatType = (decimal)dataRow["VAT"],
-                    PreparationTime = (TimeSpan)dataRow["PreparationTime"],
-                    Comments = (string)dataRow["Comment"],
-                    MenuType = (MenuType)Enum.Parse(typeof(MenuType), (string)dataRow["MenuType"]),
-                    ItemPlacedTime = (DateTime)dataRow["ItemPlacedTime"]
-
+                    /*OrderItemId = (int)dataRow["orderItemID"],*/
+                    MenuItem = new MenuItem { Name = (string)dataRow["ItemName"],// 
+                        PreparationTime = (TimeSpan)dataRow["PreparationTime"],
+                        ItemId = (int)dataRow["itemID"],
+                    },
+                    OrderStatus = (OrderStatus)Enum.Parse(typeof(OrderStatus), dataRow["OrderStatus"].ToString()),
+                    Order = new Order { OrderTime = (DateTime)dataRow["orderDateTime"] }
                 };
                 orderItems.Add(item);
             }
             return orderItems;
-
         }
     }
 }

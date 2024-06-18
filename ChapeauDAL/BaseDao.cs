@@ -60,6 +60,52 @@ namespace ChapeauDAL
                 CloseConnection();
             }
         }
+        protected int ExecuteEditQueryReturnId(string query, SqlParameter[] sqlParameters)
+        {
+            // -1 means failure. Update if succeeds
+            int newlyAddedID = -1;
+            SqlCommand command = new SqlCommand();
+            try
+            {
+                command.Connection = OpenConnection();
+                command.CommandText = query;
+                command.Parameters.AddRange(sqlParameters);
+                adapter.InsertCommand = command;
+                decimal result = (decimal)command.ExecuteScalar();
+                newlyAddedID = (int)Math.Round(result, 1);
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+            return newlyAddedID;
+        }
+        protected object ExecuteEditQueryReturnObject(string query, SqlParameter[] sqlParameters)
+        {
+            using (SqlCommand command = new SqlCommand())
+            {
+                try
+                {
+                    command.Connection = OpenConnection();
+                    command.CommandText = query;
+                    command.Parameters.AddRange(sqlParameters);
+                    object result = command.ExecuteScalar();
+                    return result;
+                }
+                catch (SqlException e)
+                {
+                    throw new Exception(e.Message);
+                }
+                finally
+                {
+                    CloseConnection();
+                }
+            }
+        }
 
         /* For Select Queries with sql parameters */ //this one returns based on an id or smth like that
         protected DataTable ExecuteSelectQueryWithParameters(string query, params SqlParameter[] sqlParameters)

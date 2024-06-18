@@ -39,19 +39,19 @@ namespace ChapeauUI
                 Table table = (Table)clickedButton.Tag;
                 OrderService orderService = new OrderService();
                 List<OrderItem> orderItems  = orderService.GetOrderItems(table);
-                List<OrderItem> unservedItems = orderItems.Where(item => item.OrderStatus != OrderStatus.Served).ToList();//TODO: check that or should I do it in teh Dao 
-                List<OrderItem> preparedItems = orderItems.Where(item => item.OrderStatus == OrderStatus.Prepared).ToList();//TODO: discuss in the meeting
-
+               
                 if (table.Status == TableStatus.Ordered)
                 {
-                    if (preparedItems.Any()) //check if there are any preparedITems
+                    List<OrderItem> unservedItems = orderItems.Where(item => item.OrderStatus != OrderStatus.Served).ToList();
+                    List<OrderItem> preparedItems = orderItems.Where(item => item.OrderStatus == OrderStatus.Prepared).ToList();
+
+                    if (preparedItems.Any()) 
                     {
                         ShowReadyOrderItems(table, clickedButton.Location, preparedItems);
                     }
                     else
                     {
-                        //a method that shows a list of items and with Time
-                        ShowOrderItems(table, clickedButton.Location, unservedItems);
+                        ShowOrderOptions(table, clickedButton.Location, unservedItems);
                     }
                 }
                 else
@@ -169,7 +169,6 @@ namespace ChapeauUI
 
             popUpForm.ShowDialog();
 
-            //why I close it when I am hide it?
             activeForm.Close();
         }
 
@@ -210,6 +209,7 @@ namespace ChapeauUI
             orderForm.FormClosed += (sender, e) =>
             {
                 HandleFormClosed(table);
+        
                 RefreshTableView();
             };
 
@@ -220,7 +220,7 @@ namespace ChapeauUI
         {
             return new Form()
             {
-                Size = new Size(300, 400),
+                Size = new Size(300, 420),
                 StartPosition = FormStartPosition.Manual,
                 Location = new Point(buttonLocation.X + 100, buttonLocation.Y)
             };
@@ -239,7 +239,7 @@ namespace ChapeauUI
 
             foreach (OrderItem item in preparedItems)
             {
-                    checkedListBox.Items.Add(item.ItemName);
+                    checkedListBox.Items.Add(item.MenuItem.Name);
                     itemIndexMapping[index] = item;
                     index++;
             }
@@ -260,10 +260,17 @@ namespace ChapeauUI
         }
         private void HandleFormClosed(Table table)
         {
-                TableService tableService = new TableService();
-                tableService.CheckAndSetTableStatus(table);
-        }
+            TableService tableService = new TableService();
+            OrderService orderService = new OrderService();
+            List<OrderItem> orderItems = orderService.GetOrderItems(table);
+            bool allItemsServed = orderItems.All(item => item.OrderStatus == OrderStatus.Served);
 
+            if (allItemsServed)
+            {
+                table.Status = TableStatus.Occupied;
+                tableService.UpdateTableStatus(table);
+            }
+        }
 
 
         private void RefreshTableView()
@@ -281,7 +288,7 @@ namespace ChapeauUI
         }
 
 
-        private void ShowOrderItems(Table table, Point buttonLocation, List<OrderItem> items)
+        private void ShowOrderOptions(Table table, Point buttonLocation, List<OrderItem> items)
         {
             Form orderForm = CreateOrderForm(buttonLocation);
           
@@ -298,7 +305,7 @@ namespace ChapeauUI
 
             foreach (OrderItem item in items)
             {
-                ListViewItem listViewItem = new ListViewItem(item.ItemName);
+                ListViewItem listViewItem = new ListViewItem(item.MenuItem.Name);
                 listViewItem.SubItems.Add(GetCountdownString(item));
                 listViewItem.Tag = item;
                 listView.Items.Add(listViewItem);
@@ -307,13 +314,23 @@ namespace ChapeauUI
             }
 
             orderForm.Controls.Add(listView);
+            Button addOrderButton = new Button
+            {
+                Text = "Add Order",
+                Location = new Point(20, 320),
+                Width = 100,
+                Height = 40,
+            };
+            orderForm.Controls.Add(addOrderButton);
+            addOrderButton.Click += (sender, e) =>
+            {
+                OpenUI(new OrderList(table, LoggedInEployee));
+            };
             orderForm.ShowDialog();
 
-            OrderService orderService = new OrderService();
             orderForm.FormClosed += (sender, e) =>
             {
                 HandleFormClosed(table);
-
 
                 RefreshTableView();
             };
@@ -331,7 +348,7 @@ namespace ChapeauUI
         private void UpdateCountdown(ListViewItem listViewItem, OrderItem orderItem)
         {
             DateTime now = DateTime.Now;
-            DateTime targetTime = orderItem.ItemPlacedTime.Add(orderItem.PreparationTime);
+            DateTime targetTime = orderItem.Order.OrderTime.Add(orderItem.MenuItem.PreparationTime);
 
             TimeSpan timeLeft = targetTime - now;
 
@@ -353,7 +370,7 @@ namespace ChapeauUI
         private string GetCountdownString(OrderItem orderItem)
         {
             DateTime now = DateTime.Now;
-            DateTime targetTime = orderItem.ItemPlacedTime.Add(orderItem.PreparationTime);
+            DateTime targetTime = orderItem.Order.OrderTime.Add(orderItem.MenuItem.PreparationTime);
 
             TimeSpan timeLeft = targetTime - now;
 

@@ -47,9 +47,11 @@ namespace ChapeauUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show("An error occurred while trying to log in. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+                ActivityLogger logger = new ActivityLogger();
+                logger.Log($"Error during login for username {usernameTxt.Text}: {ex.Message}", "ERROR");
 
+                invalidcredentiallbl.Text = "An unexpected error occurred. Please try again later.";               
+            }
         }
 
 

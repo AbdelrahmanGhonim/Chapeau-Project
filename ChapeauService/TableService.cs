@@ -11,12 +11,12 @@ namespace ChapeauService
     public class TableService
     {
         private TableDao tableDao;
-        OrderDao orderDao;
+        private readonly ActivityLogger logger = new ActivityLogger();
+
 
         public TableService()
         {
             tableDao = new TableDao();
-            orderDao = new OrderDao();
         }
 
         public List<Table> GetAllTables()
@@ -27,18 +27,9 @@ namespace ChapeauService
 
         public void UpdateTableStatus(Table table)
         {
-                tableDao.UpdateTableStatus(table);
+            tableDao.UpdateTableStatus(table);
         }
 
-        public void CheckAndSetTableStatus(Table table)
-        {
-            bool allItemsServed = orderDao.GetOrderItems(table).All(item => item.OrderStatus == OrderStatus.Served);
-            if (allItemsServed)
-            {
-                table.Status = TableStatus.Occupied;
-            }
-            UpdateTableStatus(table);
-        }
 
         public void ReserveTable(Table table)
         {
@@ -47,10 +38,9 @@ namespace ChapeauService
                 throw new InvalidOperationException("The table is already reserved.");
             }
 
-            // Check for unpaid order items before change the status
-            CheckForUnpaidOrderItems(table);
-
             table.Status = TableStatus.Reserved;
+            logger.Log($"Table {table.TableNumber} set to Reserved.");
+
             UpdateTableStatus(table);
         }
 
@@ -61,30 +51,28 @@ namespace ChapeauService
                 throw new InvalidOperationException("The table is already available.");
             }
 
-            // Check for unpaid order items before change the status
-            CheckForUnpaidOrderItems(table);
             table.Status = TableStatus.Available;
+            logger.Log($"Table {table.TableNumber} set to Available.");
             UpdateTableStatus(table);
         }
 
         public void OccupyTable(Table table)
         { 
-             table.Status= TableStatus.Occupied;
+            if(table.Status==TableStatus.Occupied)
+            {
+                throw new InvalidOperationException("The table is already Occupied.");
+            }
+            table.Status= TableStatus.Occupied;
+            logger.Log($"Table {table.TableNumber} set to Occupied.");
+
             UpdateTableStatus(table);
         }
-        public Table GetTableById(int id)
-        {
-         return tableDao.getTableById(id);
-        }
 
-        private void CheckForUnpaidOrderItems(Table table) //TODO: Ask Luca about how they check if if the order is payed or not 
+        //TODO: waiting for Luca to finish this part 
+        private bool CheckForUnpaidOrderItems(Table table)
         {
-            List<OrderItem> unpaidItems = orderDao.GetOrderItems(table).ToList();
-                                           
-            if (unpaidItems.Any())
-            {
-                throw new InvalidOperationException("Order table is unpaid!");
-            }
+
+            return true;
         }
 
     }
