@@ -49,15 +49,15 @@ namespace ChapeauDAL
 
         public void AddOrder(Order order)
         {
-            string query = "INSERT INTO [dbo].[Order] (tableNumber, billID, orderDateTime) " +
-                           "VALUES (@tableNumber, @billID, @orderDateTime); " +
+            string query = "INSERT INTO [dbo].[Order] (tableNumber, orderDateTime, employee) " +
+                           "VALUES (@tableNumber, @orderDateTime, @employee); " +
                            "SELECT SCOPE_IDENTITY();";
 
             SqlParameter[] parameters = new SqlParameter[]
             {
-        new SqlParameter("@tableNumber", order.TableNumber.TableNumber),
-        new SqlParameter("@billID", order.BillID),
-        new SqlParameter("@orderDateTime", order.OrderTime)
+                new SqlParameter("@tableNumber", order.TableNumber.TableNumber),        
+                new SqlParameter("@orderDateTime", order.OrderTime),
+                new SqlParameter("@employee", order.Employee.EmployeeId)
             };
 
             int orderId = ExecuteEditQueryReturnId(query, parameters);

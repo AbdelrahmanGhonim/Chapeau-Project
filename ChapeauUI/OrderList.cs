@@ -126,7 +126,7 @@ namespace ChapeauUI {
         {
             try
             {
-                Order newOrder = new Order(selectedTable);
+                Order newOrder = new Order(selectedTable, loggedEmployee);
                 newOrder.OrderedItems = orderedItems;
 
                 orderService.AddOrder(newOrder);
