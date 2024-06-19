@@ -23,21 +23,8 @@ namespace ChapeauDAL
                 new SqlParameter("@menuType", menuItemType.ToString())
             };
 
-            try
-            {
-                DataTable resultTable = ExecuteSelectQueryWithParameters(sql, sqlParameters);
-                var result = ReadMenuTables(resultTable);
-
-                Console.WriteLine("SQL Query: " + sql);
-                Console.WriteLine("Retrieved " + result.Count + " items for menu type " + menuItemType);
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error executing query: " + ex.Message);
-                throw;
-            }
+            DataTable resultTable = ExecuteSelectQueryWithParameters(sql, sqlParameters);
+            return ReadMenuTables(resultTable);
         }
         public void UpdateStock(int itemId, int quantity)
         {
@@ -57,7 +44,7 @@ namespace ChapeauDAL
 
             SqlParameter[] parameters = {
             new SqlParameter("@ItemId", itemId)
-        };
+            };
 
             return ExecuteScalarQuery<int>(query, parameters, 0);
         }
@@ -73,25 +60,18 @@ namespace ChapeauDAL
                 new SqlParameter("@ItemId", itemId)
             };
 
-            try
-            {
-                DataTable resultTable = ExecuteSelectQueryWithParameters(sql, sqlParameters);
-                var result = ReadMenuTables(resultTable);
+            DataTable resultTable = ExecuteSelectQueryWithParameters(sql, sqlParameters);
+            var result = ReadMenuTables(resultTable);
 
-                if (result.Count > 0)
-                {
-                    return result[0];
-                }
-                else
-                {
-                    throw new Exception($"No menu item found with ID {itemId}");
-                }
-            }
-            catch (Exception ex)
+            if (result.Count > 0)
             {
-                Console.WriteLine("Error executing query: " + ex.Message);
-                throw;
+                return result[0];
             }
+            else
+            {
+                throw new Exception($"No menu item found with ID {itemId}");
+            }
+
         }
         private MenuItemType ConvertStringToMenuItemType(string menuItemType)
         {

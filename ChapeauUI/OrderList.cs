@@ -85,6 +85,7 @@ namespace ChapeauUI {
         {
 
             MenuItem menuItem = menuItemsService.GetMenuItemById(menuItemControl.MenuItemId);
+            //check if there is item that matches & no comment
             OrderItem existingItem = orderedItems.FirstOrDefault(item => item.MenuItem.ItemId == menuItem.ItemId && string.IsNullOrEmpty(item.Comments));
 
             if (existingItem != null)
@@ -114,7 +115,6 @@ namespace ChapeauUI {
             };
             flowLayoutPanelMenu.Controls.Add(categoryHeader);
         }
-
         private string CategoryDisplayName(Category category)
         {
             return category switch
@@ -133,6 +133,7 @@ namespace ChapeauUI {
         }
         private void DisplayMenuItemsForCategory(List<MenuItem> menuItems, Category category)
         {
+            //filter items to get only ones to assigned category
             var itemsForCategory = menuItems.Where(mi => mi.Category == category).ToList();
             foreach (var menuItem in itemsForCategory)
             {
@@ -289,7 +290,7 @@ namespace ChapeauUI {
                 }
                 else
                 {
-                    MessageBox.Show("The selected item does not have a comment.");
+                    MessageBox.Show("It is not possible to add comment to this item.");
                 }
             }
         }
